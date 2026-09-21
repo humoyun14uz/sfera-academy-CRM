@@ -16,19 +16,16 @@ export function Header({ className, fixed, children, ...props }: HeaderProps) {
       setOffset(document.body.scrollTop || document.documentElement.scrollTop)
     }
 
-    // Add scroll listener to the body
     document.addEventListener('scroll', onScroll, { passive: true })
-
-    // Clean up the event listener on unmount
     return () => document.removeEventListener('scroll', onScroll)
   }, [])
 
   return (
     <header
       className={cn(
-        'header-fixed peer/header sticky top-0 z-50 h-16 w-full min-w-0 shrink-0 overflow-hidden border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80',
+        'header-fixed peer/header sticky top-0 z-50 h-16 w-full min-w-0 shrink-0 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80',
         fixed && 'w-full',
-        offset > 10 && fixed ? 'shadow' : 'shadow-none',
+        offset > 10 && fixed ? 'shadow-sm' : 'shadow-none',
         className
       )}
       {...props}
@@ -43,7 +40,7 @@ export function Header({ className, fixed, children, ...props }: HeaderProps) {
       >
         <SidebarTrigger
           variant='outline'
-          className='size-8 shrink-0 sm:size-7'
+          className='size-8 shrink-0 border-border/70 sm:size-7'
         />
         <div className='flex min-w-0 flex-1 items-center gap-3 sm:gap-4'>
           {children}
