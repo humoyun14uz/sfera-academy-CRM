@@ -1,43 +1,100 @@
-const DEFAULT_MAX_AGE = 60 * 60 * 24 * 7
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts'
+import { useLanguage } from '@/context/language-provider'
+import { loadCourses } from '@/features/courses/data'
 
-const isSecureContext = () =>
-  typeof window !== 'undefined' && window.location.protocol === 'https:'
+const monthNames = ['Yan', 'Fev', 'Mar', 'Apr', 'May', 'Iyun', 'Iyul', 'Avg', 'Sen', 'Okt', 'Noy', 'Dek']
 
-/**
- * Get a cookie value by name
- */
-export function getCookie(name: string): string | undefined {
-  if (typeof document === 'undefined') return undefined
+const formatMillions = (value: number) => `${Math.round(Math.abs(value) / 1000000)} mln`
 
-  const cookies = document.cookie ? document.cookie.split('; ') : []
-  const cookie = cookies.find((entry) => entry.startsWith(`${name}=`))
-
-  if (!cookie) return undefined
-
-  const value = cookie.slice(name.length + 1)
-  return value ? decodeURIComponent(value) : undefined
+const getPaymentMonth = (date?: string | null) => {
+  if (!date || typeof date !== 'string') return -1
+  const month = Number(date.slice(5, 7))
+  return Number.isFinite(month) ? month - 1 : -1
 }
 
-/**
- * Set a cookie with name, value, and optional max age
- */
-export function setCookie(
-  name: string,
-  value: string,
-  maxAge: number = DEFAULT_MAX_AGE
-): void {
-  if (typeof document === 'undefined') return
+export function Overview() {
+  const { language, t } = useLanguage()
+  const english = language === 'en'
+  const courses = loadCourses()
 
-  const secure = isSecureContext() ? '; secure' : ''
-  document.cookie = `${name}=${encodeURIComponent(value)}; path=/; max-age=${maxAge}; samesite=lax${secure}`
-}
+  const chartData = monthNames.map((name, index) => ({
+    total: courses.reduce((sum, course) => {
+      const totalForMonth = course.students.reduce((studentSum, student) => {
+        const paymentMonth = getPaymentMonth(student.lastPaymentDate)
+        const paidAmount = Number(student.paidAmount)
 
-/**
- * Remove a cookie by setting its max age to 0
- */
-export function removeCookie(name: string): void {
-  if (typeof document === 'undefined') return
+        return studentSum + (paymentMonth === index && Number.isFinite(paidAmount) ? paidAmount : 0)
+      }, 0)
 
-  const secure = isSecureContext() ? '; secure' : ''
-  document.cookie = `${name}=; path=/; max-age=0; samesite=lax${secure}`
+      return sum + totalForMonth
+    }, 0),
+    name: english ? ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][index] : name,
+  }))
+
+  return (
+    <ResponsiveContainer width='100%' height={320}>
+      <BarChart data={chartData} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
+        <CartesianGrid vertical={false} strokeDasharray='3 3' opacity={0.35} />
+        <XAxis
+          dataKey='name'
+          stroke='var(--muted-foreground)'
+          fontSize={12}
+          tickLine={false}
+          axisLine={false}
+          tick={{ fill: 'var(--muted-foreground)' }}
+        />
+        <YAxis
+          stroke='var(--muted-foreground)'
+          fontSize={12}
+          tickLine={false}
+          axisLine={false}
+          tickFormatter={formatMillions}
+          width={48}
+          tick={{ fill: 'var(--muted-foreground)' }}
+        />
+        <Tooltip
+          cursor={{ fill: 'var(--muted)', opacity: 0.35 }}
+          position={{ y: 4 }}
+          wrapperStyle={{ zIndex: 1000 }}
+          content={({ active, payload, label }) =>
+            active && payload?.length ? (
+              <div
+                style={{
+                  minWidth: 160,
+                  borderRadius: 12,
+                  border: '1px solid var(--border)',
+                  backgroundColor: 'var(--card)',
+                  padding: '10px 12px',
+                  color: 'var(--card-foreground)',
+                  boxShadow: '0 10px 30px rgba(15, 23, 42, 0.22)',
+                }}
+              >
+                <p style={{ margin: 0, fontWeight: 700 }}>{label}</p>
+                <p
+                  style={{
+                    margin: '4px 0 0',
+                    color: 'var(--muted-foreground)',
+                  }}
+                >
+                  {t('income')}:
+                  <strong style={{ color: 'var(--card-foreground)' }}>
+                    {Number(payload[0].value ?? 0).toLocaleString('uz-UZ')} so‘m
+                  </strong>
+                </p>
+              </div>
+            ) : null
+          }
+        />
+        <Bar dataKey='total' fill='var(--primary)' radius={[5, 5, 0, 0]} maxBarSize={34} />
+      </BarChart>
+    </ResponsiveContainer>
+  )
 }
