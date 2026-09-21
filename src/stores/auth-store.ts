@@ -23,37 +23,48 @@ interface AuthState {
   }
 }
 
-export const useAuthStore = create<AuthState>()((set) => {
-  const cookieState = getCookie(ACCESS_TOKEN)
-  const cookieUser = getCookie(AUTH_USER)
-  let initToken = ''
-  let parsedUser: AuthUser | null = null
+function parseJson<T>(value: string | undefined): T | null {
+  if (!value) return null
   try {
-    initToken = cookieState ? JSON.parse(cookieState) : ''
-    parsedUser = cookieUser ? JSON.parse(cookieUser) : null
+    return JSON.parse(value) as T
   } catch {
+    return null
+  }
+}
+
+export const useAuthStore = create<AuthState>()((set) => {
+  const tokenValue = getCookie(ACCESS_TOKEN)
+  const parsedUser = parseJson<AuthUser>(getCookie(AUTH_USER))
+  const parsedToken = parseJson<string>(tokenValue)
+  const token = parsedToken ?? tokenValue ?? ''
+  const expired = parsedUser?.exp ? parsedUser.exp * 1000 <= Date.now() : false
+  const user = expired
+    ? null
+    : parsedUser
+      ? {
+          ...parsedUser,
+          name:
+            parsedUser.name === 'Sfera Administrator'
+              ? parsedUser.email.split('@')[0]
+              : parsedUser.name,
+        }
+      : null
+
+  if (expired || (tokenValue && !parsedUser && !token)) {
     removeCookie(ACCESS_TOKEN)
     removeCookie(AUTH_USER)
   }
-  const initUser = parsedUser
-    ? {
-        ...parsedUser,
-        name:
-          parsedUser.name === 'Sfera Administrator'
-            ? parsedUser.email.split('@')[0]
-            : parsedUser.name,
-      }
-    : null
+
   return {
     auth: {
-      user: initUser,
-      setUser: (user) =>
+      user,
+      setUser: (nextUser) =>
         set((state) => {
-          if (user) setCookie(AUTH_USER, JSON.stringify(user))
+          if (nextUser) setCookie(AUTH_USER, JSON.stringify(nextUser))
           else removeCookie(AUTH_USER)
-          return { ...state, auth: { ...state.auth, user } }
+          return { ...state, auth: { ...state.auth, user: nextUser } }
         }),
-      accessToken: initToken,
+      accessToken: user ? token : '',
       setAccessToken: (accessToken) =>
         set((state) => {
           setCookie(ACCESS_TOKEN, JSON.stringify(accessToken))
