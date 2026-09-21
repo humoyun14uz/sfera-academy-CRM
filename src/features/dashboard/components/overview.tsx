@@ -1,127 +1,135 @@
+import { useAuthStore } from '@/stores/auth-store'
+import { getPrimaryRole } from '@/lib/rbac'
+import { useLanguage, type TranslationKey } from '@/context/language-provider'
+import { useLayout } from '@/context/layout-provider'
 import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts'
-import { useLanguage } from '@/context/language-provider'
-import { loadCourses } from '@/features/courses/data'
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarRail,
+} from '@/components/ui/sidebar'
+import { AppTitle } from './app-title'
+import { sidebarData } from './data/sidebar-data'
+import { NavGroup } from './nav-group'
+import { SidebarUser } from './sidebar-user'
 
-const monthNames = [
-  'Yan',
-  'Fev',
-  'Mar',
-  'Apr',
-  'May',
-  'Iyun',
-  'Iyul',
-  'Avg',
-  'Sen',
-  'Okt',
-  'Noy',
-  'Dek',
-]
+export function AppSidebar() {
+  const { collapsible, variant } = useLayout()
+  const { t } = useLanguage()
+  const user = useAuthStore((state) => state.auth.user)
+  const role = getPrimaryRole(user?.role)
+  const allowedGroups =
+    role === 'Super Admin'
+      ? ['Academy', 'Management', 'System']
+      : role === 'Manager'
+        ? ['Academy', 'Management']
+        : role === 'Teacher'
+          ? ['Teacher', 'TeacherSystem']
+          : role === 'Finance'
+            ? ['Finance', 'FinanceSystem']
+            : ['Student', 'StudentFinance', 'System']
 
-const formatMillions = (value: number) => `${Math.round(value / 1000000)} mln`
-
-export function Overview() {
-  const { language, t } = useLanguage()
-  const english = language === 'en'
-  const courses = loadCourses()
-  const chartData = monthNames.map((name, index) => ({
-    total: courses.reduce(
-      (sum, course) =>
-        sum +
-        course.students.reduce((studentSum, student) => {
-          const paymentMonth = Number(student.lastPaymentDate.slice(5, 7)) - 1
-          return studentSum + (paymentMonth === index ? student.paidAmount : 0)
-        }, 0),
-      0
-    ),
-    name: english
-      ? [
-          'Jan',
-          'Feb',
-          'Mar',
-          'Apr',
-          'May',
-          'Jun',
-          'Jul',
-          'Aug',
-          'Sep',
-          'Oct',
-          'Nov',
-          'Dec',
-        ][index]
-      : name,
-  }))
-  return (
-    <ResponsiveContainer width='100%' height={320}>
-      <BarChart
-        data={chartData}
-        margin={{ top: 8, right: 12, left: 0, bottom: 0 }}
-      >
-        <CartesianGrid vertical={false} strokeDasharray='3 3' opacity={0.35} />
-        <XAxis
-          dataKey='name'
-          stroke='var(--muted-foreground)'
-          fontSize={12}
-          tickLine={false}
-          axisLine={false}
-          tick={{ fill: 'var(--muted-foreground)' }}
-        />
-        <YAxis
-          stroke='var(--muted-foreground)'
-          fontSize={12}
-          tickLine={false}
-          axisLine={false}
-          tickFormatter={formatMillions}
-          width={48}
-          tick={{ fill: 'var(--muted-foreground)' }}
-        />
-        <Tooltip
-          cursor={{ fill: 'var(--muted)', opacity: 0.35 }}
-          position={{ y: 4 }}
-          wrapperStyle={{ zIndex: 1000 }}
-          content={({ active, payload, label }) =>
-            active && payload?.length ? (
-              <div
-                style={{
-                  minWidth: 160,
-                  borderRadius: 12,
-                  border: '1px solid var(--border)',
-                  backgroundColor: 'var(--card)',
-                  padding: '10px 12px',
-                  color: 'var(--card-foreground)',
-                  boxShadow: '0 10px 30px rgba(15, 23, 42, 0.22)',
-                }}
-              >
-                <p style={{ margin: 0, fontWeight: 700 }}>{label}</p>
-                <p
-                  style={{
-                    margin: '4px 0 0',
-                    color: 'var(--muted-foreground)',
-                  }}
-                >
-                  {t('income')}:
-                  <strong style={{ color: 'var(--card-foreground)' }}>
-                    {Number(payload[0].value).toLocaleString('uz-UZ')} so‘m
-                  </strong>
-                </p>
-              </div>
-            ) : null
-          }
-        />
-        <Bar
-          dataKey='total'
-          fill='var(--primary)'
-          radius={[5, 5, 0, 0]}
-          maxBarSize={34}
-        />
-      </BarChart>
-    </ResponsiveContainer>
+  const groups = sidebarData.navGroups.filter((group) =>
+    allowedGroups.includes(group.title)
   )
+
+  const navGroups = groups.map((group) => ({
+    ...group,
+    title: ['Teacher', 'Finance', 'Student'].includes(group.title)
+      ? t(group.title.toLowerCase() as 'teacher' | 'finance' | 'student')
+      : group.title === 'Academy'
+        ? t('academy')
+        : group.title === 'Management'
+          ? 'Boshqaruv'
+          : group.title === 'StudentFinance'
+            ? t('finance')
+            : group.title === 'System'
+              ? t('system')
+              : group.title,
+    items: group.items.map((item) => {
+      const { items: nestedItems, ...itemWithoutNestedItems } = item
+      return {
+        ...itemWithoutNestedItems,
+        title: translateTitle(item.title, t),
+        ...(nestedItems
+          ? {
+              items: nestedItems.map((nested) => ({
+                ...nested,
+                title: translateTitle(nested.title, t),
+              })),
+            }
+          : {}),
+      }
+    }),
+  })) as typeof sidebarData.navGroups
+
+  return (
+    <Sidebar collapsible={collapsible} variant={variant}>
+      <SidebarHeader className='border-b border-sidebar-border px-4'>
+        <div className='-mx-2'>
+          <AppTitle />
+        </div>
+      </SidebarHeader>
+      <SidebarContent>
+        {navGroups.map((props, index) => (
+          <div key={props.title}>
+            {index > 0 && (
+              <div className='my-2 mx-3 h-px bg-sidebar-border/70 group-data-[collapsible=icon]:my-3 group-data-[collapsible=icon]:mx-2' />
+            )}
+            <NavGroup {...props} />
+          </div>
+        ))}
+      </SidebarContent>
+      <SidebarFooter>
+        <SidebarUser />
+      </SidebarFooter>
+      <SidebarRail />
+    </Sidebar>
+  )
+}
+
+function translateTitle(title: string, t: (key: TranslationKey) => string) {
+  const map: Record<string, string> = {
+    'Moliya paneli': t('financeDashboard'),
+    'Finance dashboard': t('financeDashboard'),
+    'To‘lovlar': t('payments'),
+    Payments: t('payments'),
+    Qarzdorlik: t('debt'),
+    'Outstanding debt': t('debt'),
+    'O‘quvchilar': t('students'),
+    Students: t('students'),
+    Hisobotlar: t('reports'),
+    Reports: t('reports'),
+    Vazifalar: t('tasks'),
+    Tasks: t('tasks'),
+    'Boshqaruv paneli': t('dashboard'),
+    Dashboard: t('dashboard'),
+    'Mening guruhlarim': t('myGroups'),
+    'Mening kursim': t('myCourse'),
+    'Mening guruhim': t('myGroup'),
+    Jadvalim: t('mySchedule'),
+    Davomatim: t('myAttendance'),
+    Vazifalarim: t('myTasks'),
+    Baholarim: t('myGrades'),
+    'To‘lovlarim': t('myPayments'),
+    'Bugungi darslar': t('todayLessons'),
+    Davomat: t('attendance'),
+    Baholar: t('grades'),
+    Sozlamalar: t('settings'),
+    Profil: t('profile'),
+    Profilim: t('myProfile'),
+    Hisob: t('account'),
+    'Ko‘rinish': t('appearance'),
+    Bildirishnomalar: t('notifications'),
+    Ekran: t('display'),
+    Guruhlar: t('groups'),
+    Kurslar: t('courses'),
+    'O‘qituvchilar': t('teachers'),
+    Jadval: t('schedule'),
+    Moliya: t('finance'),
+    Arizalar: t('applications'),
+  }
+
+  return map[title] ?? title
 }

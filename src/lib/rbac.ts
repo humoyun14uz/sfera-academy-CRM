@@ -1,186 +1,138 @@
-export const PERMISSIONS = [
-  'dashboard.read',
-  'tasks.read',
-  'messages.read',
-  'students.read',
-  'students.create',
-  'students.update',
-  'students.assign_group',
-  'students.change_course',
-  'students.change_status',
-  'students.deactivate',
-  'leads.read',
-  'leads.create',
-  'leads.update',
-  'leads.change_status',
-  'leads.assign_manager',
-  'leads.manage_trial',
-  'leads.convert',
-  'groups.read',
-  'groups.create',
-  'groups.update',
-  'groups.deactivate',
-  'groups.assign_teacher',
-  'groups.manage_students',
-  'groups.manage_schedule',
-  'courses.read',
-  'courses.create',
-  'courses.update',
-  'courses.deactivate',
-  'courses.manage_price',
-  'courses.manage_duration',
-  'teachers.read',
-  'teachers.create',
-  'teachers.update',
-  'teachers.assign_group',
-  'teachers.deactivate',
-  'payments.read',
-  'payments.create',
-  'payments.verify',
-  'payments.view_debt',
-  'payments.view_reports',
-  'reports.read',
-  'users.read',
-  'users.create',
-  'users.assign_role',
-  'users.change_role',
-  'users.deactivate',
-  'settings.read',
-  'settings.manage_academy',
-  'settings.manage_courses',
-  'settings.manage_groups',
-  'settings.manage_notifications',
-  'settings.manage_crm',
-  'teacher.workspace',
-  'finance.workspace',
-] as const
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts'
+import { useLanguage } from '@/context/language-provider'
+import { loadCourses } from '@/features/courses/data'
 
-export type Permission = (typeof PERMISSIONS)[number]
+const monthNames = [
+  'Yan',
+  'Fev',
+  'Mar',
+  'Apr',
+  'May',
+  'Iyun',
+  'Iyul',
+  'Avg',
+  'Sen',
+  'Okt',
+  'Noy',
+  'Dek',
+]
 
-export const ROLES = [
-  'Super Admin',
-  'Manager',
-  'Teacher',
-  'Finance',
-  'Student',
-] as const
+const formatMillions = (value: number) =>
+  `${Math.round(Math.abs(value) / 1000000)} mln`
 
-export type Role = (typeof ROLES)[number]
+const getPaymentMonth = (date?: string | null) => {
+  if (!date || typeof date !== 'string') return -1
 
-const ADMINISTRATOR_PERMISSIONS: readonly Permission[] = PERMISSIONS
-
-const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
-  'Super Admin': ADMINISTRATOR_PERMISSIONS,
-  Manager: [
-    'dashboard.read',
-    'tasks.read',
-    'messages.read',
-    'students.read',
-    'students.create',
-    'students.update',
-    'students.assign_group',
-    'students.change_course',
-    'students.change_status',
-    'leads.read',
-    'leads.create',
-    'leads.update',
-    'leads.change_status',
-    'leads.assign_manager',
-    'leads.manage_trial',
-    'leads.convert',
-    'groups.read',
-    'groups.manage_students',
-    'groups.manage_schedule',
-    'courses.read',
-    'teachers.read',
-    'reports.read',
-  ],
-  Teacher: [
-    'dashboard.read',
-    'teacher.workspace',
-    'tasks.read',
-    'students.read',
-    'groups.read',
-    'groups.manage_students',
-    'groups.manage_schedule',
-    'courses.read',
-    'teachers.read',
-  ],
-  Finance: [
-    'dashboard.read',
-    'finance.workspace',
-    'tasks.read',
-    'messages.read',
-    'students.read',
-    'payments.read',
-    'payments.create',
-    'payments.verify',
-    'payments.view_debt',
-    'payments.view_reports',
-  ],
-  Student: [
-    'dashboard.read',
-    'students.read',
-    'courses.read',
-    'tasks.read',
-    'settings.read',
-  ],
+  const month = Number(date.slice(5, 7))
+  return Number.isFinite(month) ? month - 1 : -1
 }
 
-export function normalizeRole(role?: string): Role {
-  const normalized = role?.trim().toLowerCase().replace(/[_-]/g, ' ')
-  if (normalized === 'superadmin' || normalized === 'super admin')
-    return 'Super Admin'
-  if (normalized === 'admin' || normalized === 'administrator') return 'Super Admin'
-  if (normalized === 'manager') return 'Manager'
-  if (normalized === 'teacher') return 'Teacher'
-  if (normalized === 'finance' || normalized === 'financial') return 'Finance'
-  if (normalized === 'student') return 'Student'
-  return 'Student'
-}
+export function Overview() {
+  const { language, t } = useLanguage()
+  const english = language === 'en'
+  const courses = loadCourses()
 
-export function isKnownRole(role?: string): boolean {
-  const normalized = role?.trim().toLowerCase().replace(/[_-]/g, ' ')
-  return [
-    'superadmin',
-    'super admin',
-    'admin',
-    'administrator',
-    'manager',
-    'teacher',
-    'finance',
-    'financial',
-    'student',
-  ].includes(normalized ?? '')
-}
+  const chartData = monthNames.map((name, index) => ({
+    total: courses.reduce((sum, course) => {
+      const totalForMonth = course.students.reduce((studentSum, student) => {
+        const paymentMonth = getPaymentMonth(student.lastPaymentDate)
+        const paidAmount = Number(student.paidAmount)
 
-export function getPermissionsForRole(role?: string): readonly Permission[] {
-  return isKnownRole(role) ? ROLE_PERMISSIONS[normalizeRole(role)] : []
-}
+        return studentSum + (paymentMonth === index && Number.isFinite(paidAmount) ? paidAmount : 0)
+      }, 0)
 
-export function can(
-  role: string | string[] | undefined,
-  permission: Permission
-): boolean {
-  const roles = Array.isArray(role) ? role : role ? [role] : []
-  return roles.some((item) => getPermissionsForRole(item).includes(permission))
-}
+      return sum + totalForMonth
+    }, 0),
+    name: english
+      ? [
+          'Jan',
+          'Feb',
+          'Mar',
+          'Apr',
+          'May',
+          'Jun',
+          'Jul',
+          'Aug',
+          'Sep',
+          'Oct',
+          'Nov',
+          'Dec',
+        ][index]
+      : name,
+  }))
 
-export function canAny(
-  role: string | string[] | undefined,
-  permissions: readonly Permission[]
-): boolean {
-  return permissions.some((permission) => can(role, permission))
-}
-
-export function canAll(
-  role: string | string[] | undefined,
-  permissions: readonly Permission[]
-): boolean {
-  return permissions.every((permission) => can(role, permission))
-}
-
-export function getPrimaryRole(role?: string | string[]): Role {
-  const candidate = Array.isArray(role) ? role[0] : role
-  return normalizeRole(candidate)
+  return (
+    <ResponsiveContainer width='100%' height={320}>
+      <BarChart
+        data={chartData}
+        margin={{ top: 8, right: 12, left: 0, bottom: 0 }}
+      >
+        <CartesianGrid vertical={false} strokeDasharray='3 3' opacity={0.35} />
+        <XAxis
+          dataKey='name'
+          stroke='var(--muted-foreground)'
+          fontSize={12}
+          tickLine={false}
+          axisLine={false}
+          tick={{ fill: 'var(--muted-foreground)' }}
+        />
+        <YAxis
+          stroke='var(--muted-foreground)'
+          fontSize={12}
+          tickLine={false}
+          axisLine={false}
+          tickFormatter={formatMillions}
+          width={48}
+          tick={{ fill: 'var(--muted-foreground)' }}
+        />
+        <Tooltip
+          cursor={{ fill: 'var(--muted)', opacity: 0.35 }}
+          position={{ y: 4 }}
+          wrapperStyle={{ zIndex: 1000 }}
+          content={({ active, payload, label }) =>
+            active && payload?.length ? (
+              <div
+                style={{
+                  minWidth: 160,
+                  borderRadius: 12,
+                  border: '1px solid var(--border)',
+                  backgroundColor: 'var(--card)',
+                  padding: '10px 12px',
+                  color: 'var(--card-foreground)',
+                  boxShadow: '0 10px 30px rgba(15, 23, 42, 0.22)',
+                }}
+              >
+                <p style={{ margin: 0, fontWeight: 700 }}>{label}</p>
+                <p
+                  style={{
+                    margin: '4px 0 0',
+                    color: 'var(--muted-foreground)',
+                  }}
+                >
+                  {t('income')}:
+                  <strong style={{ color: 'var(--card-foreground)' }}>
+                    {Number(payload[0].value ?? 0).toLocaleString('uz-UZ')} so‘m
+                  </strong>
+                </p>
+              </div>
+            ) : null
+          }
+        />
+        <Bar
+          dataKey='total'
+          fill='var(--primary)'
+          radius={[5, 5, 0, 0]}
+          maxBarSize={34}
+        />
+      </BarChart>
+    </ResponsiveContainer>
+  )
 }
