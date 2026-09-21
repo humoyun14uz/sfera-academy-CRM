@@ -28,38 +28,30 @@ export function AppSidebar() {
           ? ['Teacher', 'TeacherSystem']
           : role === 'Finance'
             ? ['Finance', 'FinanceSystem']
-            : ['Student', 'StudentFinance', 'StudentSystem']
-  const groups = sidebarData.navGroups.filter((group) =>
-    allowedGroups.includes(group.title)
-  )
-  const visibleGroups = groups
-  const navGroups = visibleGroups.map((group) => ({
-    ...group,
-    title: ['Teacher', 'Finance', 'Student'].includes(group.title)
-      ? t(group.title.toLowerCase() as 'teacher' | 'finance' | 'student')
-      : group.title === 'Academy'
-        ? t('academy')
-        : group.title === 'Management'
-          ? 'Boshqaruv'
-          : group.title === 'StudentFinance'
-            ? t('finance')
-            : t('system'),
-    items: group.items.map((item) => {
-      const { items: nestedItems, ...itemWithoutNestedItems } = item
-      return {
-        ...itemWithoutNestedItems,
-        title: translateTitle(item.title, t),
-        ...(nestedItems
-          ? {
-              items: nestedItems.map((nested) => ({
-                ...nested,
-                title: translateTitle(nested.title, t),
-              })),
-            }
-          : {}),
-      }
-    }),
-  })) as typeof sidebarData.navGroups
+            : ['Student', 'StudentFinance']
+
+  const navGroups = sidebarData.navGroups
+    .filter((group) => allowedGroups.includes(group.title))
+    .map((group) => ({
+      ...group,
+      title: getGroupTitle(group.title, t),
+      items: group.items.map((item) => {
+        const { items: nestedItems, ...itemWithoutNestedItems } = item
+        return {
+          ...itemWithoutNestedItems,
+          title: translateTitle(item.title, t),
+          ...(nestedItems
+            ? {
+                items: nestedItems.map((nested) => ({
+                  ...nested,
+                  title: translateTitle(nested.title, t),
+                })),
+              }
+            : {}),
+        }
+      }),
+    })) as typeof sidebarData.navGroups
+
   return (
     <Sidebar collapsible={collapsible} variant={variant}>
       <SidebarHeader className='border-b border-sidebar-border px-4'>
@@ -83,6 +75,16 @@ export function AppSidebar() {
       <SidebarRail />
     </Sidebar>
   )
+}
+
+function getGroupTitle(title: string, t: (key: TranslationKey) => string) {
+  if (title === 'Academy') return t('academy')
+  if (title === 'Management') return 'Boshqaruv'
+  if (title === 'Teacher') return t('teacher')
+  if (title === 'Finance') return t('finance')
+  if (title === 'Student') return t('student')
+  if (title === 'StudentFinance') return t('finance')
+  return t('system')
 }
 
 function translateTitle(title: string, t: (key: TranslationKey) => string) {
