@@ -1,28 +1,27 @@
 /**
- * Cookie utility functions using manual document.cookie approach
- * Replaces js-cookie dependency for better consistency
+ * Small client-side cookie helpers used by the demo auth store.
+ * Production authentication must move the session to an HttpOnly server cookie.
  */
 
-const DEFAULT_MAX_AGE = 60 * 60 * 24 * 7 // 7 days
+const DEFAULT_MAX_AGE = 60 * 60 * 24 * 7
 
-/**
- * Get a cookie value by name
- */
 export function getCookie(name: string): string | undefined {
   if (typeof document === 'undefined') return undefined
 
-  const value = `; ${document.cookie}`
-  const parts = value.split(`; ${name}=`)
-  if (parts.length === 2) {
-    const cookieValue = parts.pop()?.split(';').shift()
-    return cookieValue ? decodeURIComponent(cookieValue) : undefined
+  const prefix = `${name}=`
+  const cookie = document.cookie
+    .split('; ')
+    .find((item) => item.startsWith(prefix))
+
+  if (!cookie) return undefined
+
+  try {
+    return decodeURIComponent(cookie.slice(prefix.length)) || undefined
+  } catch {
+    return undefined
   }
-  return undefined
 }
 
-/**
- * Set a cookie with name, value, and optional max age
- */
 export function setCookie(
   name: string,
   value: string,
@@ -30,14 +29,12 @@ export function setCookie(
 ): void {
   if (typeof document === 'undefined') return
 
-  document.cookie = `${name}=${encodeURIComponent(value)}; path=/; max-age=${maxAge}; samesite=lax`
+  const secure = window.location.protocol === 'https:' ? '; secure' : ''
+  document.cookie = `${name}=${encodeURIComponent(value)}; path=/; max-age=${maxAge}; samesite=lax${secure}`
 }
 
-/**
- * Remove a cookie by setting its max age to 0
- */
 export function removeCookie(name: string): void {
   if (typeof document === 'undefined') return
 
-  document.cookie = `${name}=; path=/; max-age=0`
+  document.cookie = `${name}=; path=/; max-age=0; samesite=lax`
 }
