@@ -1,0 +1,317 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import './theme.css';
+
+@custom-variant dark (&:is(.dark *));
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  html {
+    @apply overflow-x-hidden;
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    @apply min-h-svh w-full min-w-0 bg-background text-foreground has-[div[data-variant='inset']]:bg-sidebar;
+    overflow-x: clip;
+  }
+
+  /* Theme changes use one GPU-composited snapshot instead of transitioning
+     every element, which keeps large admin pages responsive. */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
+  ::view-transition-new(root) {
+    clip-path: circle(0 at 100% 0);
+    animation: theme-reveal 900ms cubic-bezier(0.25, 1, 0.35, 1) forwards;
+  }
+
+  @keyframes theme-reveal {
+    to {
+      clip-path: circle(150vmax at 100% 0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-new(root) {
+      animation: none;
+      clip-path: none;
+    }
+  }
+
+  /* Override Radix scroll locking for sticky headers */
+  body[data-scroll-locked] {
+    overflow: unset !important;
+  }
+
+  /* Cursor pointer for buttons */
+  button:not(:disabled),
+  [role='button']:not(:disabled) {
+    cursor: pointer;
+  }
+
+  /* Prevent focus zoom on mobile devices */
+  @media screen and (max-width: 767px) {
+    input,
+    select,
+    textarea {
+      font-size: 16px !important;
+    }
+  }
+}
+
+@utility container {
+  margin-inline: auto;
+  padding-inline: 1rem;
+  @media (min-width: 640px) {
+    padding-inline: 1.5rem;
+  }
+  @media (min-width: 1024px) {
+    padding-inline: 2rem;
+  }
+}
+
+@utility no-scrollbar {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+@utility faded-bottom {
+  @apply after:pointer-events-none after:absolute after:inset-s-0 after:bottom-0 after:hidden after:h-32 after:w-full after:rounded-b-2xl md:after:block;
+
+  &::after {
+    background: linear-gradient(180deg, transparent 10%, var(--background) 70%);
+  }
+}
+
+.login-ambient {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0.92;
+}
+
+.login-ambient-square {
+  position: absolute;
+  display: block;
+  width: 5rem;
+  height: 5rem;
+  border: 1.5px solid rgb(5 150 105 / 62%);
+  border-radius: 0.45rem;
+  background: linear-gradient(
+    135deg,
+    rgb(16 185 129 / 16%),
+    rgb(20 184 166 / 5%)
+  );
+  box-shadow:
+    0 0 0 1px rgb(16 185 129 / 10%),
+    0 16px 42px rgb(5 150 105 / 16%),
+    inset 0 0 24px rgb(16 185 129 / 7%);
+  transform: rotate(18deg);
+  animation: login-square-float 11s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.login-ambient-square-1 {
+  top: 12%;
+  left: 8%;
+  width: 7rem;
+  height: 7rem;
+  animation-delay: -2s;
+}
+
+.login-ambient-square-2 {
+  top: 28%;
+  right: 16%;
+  width: 4rem;
+  height: 4rem;
+  animation-delay: -7s;
+}
+
+.login-ambient-square-3 {
+  top: 48%;
+  left: 26%;
+  width: 3rem;
+  height: 3rem;
+  animation-delay: -11s;
+}
+
+.login-ambient-square-4 {
+  right: 5%;
+  bottom: 22%;
+  width: 8rem;
+  height: 8rem;
+  animation-delay: -5s;
+}
+
+.login-ambient-square-5 {
+  bottom: 8%;
+  left: 12%;
+  width: 4rem;
+  height: 4rem;
+  animation-delay: -9s;
+}
+
+.login-ambient-square-6 {
+  top: 8%;
+  right: 42%;
+  width: 2.5rem;
+  height: 2.5rem;
+  animation-delay: -4s;
+}
+
+.login-ambient-square-7 {
+  bottom: 36%;
+  left: 52%;
+  width: 2.25rem;
+  height: 2.25rem;
+  animation-delay: -12s;
+}
+
+@keyframes login-square-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(18deg) scale(1);
+    opacity: 0.52;
+  }
+
+  50% {
+    transform: translate3d(22px, -24px, 0) rotate(48deg) scale(1.06);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .login-ambient-square {
+    animation: none;
+  }
+}
+
+/* styles.css */
+.CollapsibleContent {
+  overflow: hidden;
+}
+
+.CollapsibleContent[data-state='open'] {
+  animation: slideDown 300ms ease-out;
+}
+
+.CollapsibleContent[data-state='closed'] {
+  animation: slideUp 300ms ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    height: 0;
+  }
+
+  to {
+    height: var(--radix-collapsible-content-height);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    height: var(--radix-collapsible-content-height);
+  }
+
+  to {
+    height: 0;
+  }
+}
+/* Narrow-device guardrails: keep the shell aligned without changing the visual language. */
+@media (max-width: 700px) {
+  [data-slot='sidebar-inset'],
+  [data-slot='sidebar-inset'] > *,
+  main,
+  header,
+  header > div {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  [data-slot='sidebar-inset'] {
+    overflow-x: clip;
+  }
+
+  [data-slot='select-trigger'] {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  main {
+    overflow-x: clip;
+  }
+
+  [data-slot='card-header'] > div,
+  [data-slot='card-header'] .flex.items-center.justify-between {
+    min-width: 0;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  [data-slot='table-container'] {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  [data-slot='table'] {
+    min-width: 40rem;
+  }
+
+  h1,
+  h2,
+  h3,
+  p,
+  span,
+  button,
+  a {
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (max-width: 380px) {
+  [data-slot='sidebar-trigger'] + [data-slot='separator'] {
+    display: none;
+  }
+
+  main {
+    padding-inline: 0.75rem;
+  }
+}
+
+/* Recharts uses a white tooltip by default; keep every chart readable in dark mode. */
+.recharts-default-tooltip {
+  border: 1px solid var(--border) !important;
+  border-radius: 0.75rem !important;
+  background-color: var(--popover) !important;
+  color: var(--popover-foreground) !important;
+  box-shadow: 0 12px 30px rgb(0 0 0 / 18%) !important;
+}
+
+.recharts-tooltip-label,
+.recharts-tooltip-item,
+.recharts-tooltip-item-list {
+  color: var(--popover-foreground) !important;
+}
+
+.recharts-cartesian-axis-tick-value {
+  fill: var(--muted-foreground);
+}
