@@ -107,14 +107,62 @@ const debts = [
   },
 ]
 const students = [
-  { name: 'Azizbek Karimov', group: 'Frontend 2-guruh', groupEn: 'Frontend Group 2', teacher: 'Azizbek Karimov', balance: 0 },
-  { name: 'Madina Aliyeva', group: 'Python boshlang‘ich', groupEn: 'Python beginners', teacher: 'Golib Abduhalil', balance: 0 },
-  { name: 'Javohir Rasulov', group: 'React amaliyot', groupEn: 'React practice', teacher: 'Sardor Islomov', balance: 450000 },
-  { name: 'Shahnoza Ergasheva', group: 'Frontend 2-guruh', groupEn: 'Frontend Group 2', teacher: 'Azizbek Karimov', balance: 350000 },
-  { name: 'Bekzod Tursunov', group: 'Python boshlang‘ich', groupEn: 'Python beginners', teacher: 'Golib Abduhalil', balance: 650000 },
-  { name: 'Zarina Abdullayeva', group: 'Frontend 2-guruh', groupEn: 'Frontend Group 2', teacher: 'Azizbek Karimov', balance: 250000 },
-  { name: 'Jasur Rahimov', group: 'Python boshlang‘ich', groupEn: 'Python beginners', teacher: 'Golib Abduhalil', balance: 180000 },
-  { name: 'Kamola Rustamova', group: 'React amaliyot', groupEn: 'React practice', teacher: 'Sardor Islomov', balance: 0 },
+  {
+    name: 'Azizbek Karimov',
+    group: 'Frontend 2-guruh',
+    groupEn: 'Frontend Group 2',
+    teacher: 'Azizbek Karimov',
+    balance: 0,
+  },
+  {
+    name: 'Madina Aliyeva',
+    group: 'Python boshlang‘ich',
+    groupEn: 'Python beginners',
+    teacher: 'Golib Abduhalil',
+    balance: 0,
+  },
+  {
+    name: 'Javohir Rasulov',
+    group: 'React amaliyot',
+    groupEn: 'React practice',
+    teacher: 'Sardor Islomov',
+    balance: 450000,
+  },
+  {
+    name: 'Shahnoza Ergasheva',
+    group: 'Frontend 2-guruh',
+    groupEn: 'Frontend Group 2',
+    teacher: 'Azizbek Karimov',
+    balance: 350000,
+  },
+  {
+    name: 'Bekzod Tursunov',
+    group: 'Python boshlang‘ich',
+    groupEn: 'Python beginners',
+    teacher: 'Golib Abduhalil',
+    balance: 650000,
+  },
+  {
+    name: 'Zarina Abdullayeva',
+    group: 'Frontend 2-guruh',
+    groupEn: 'Frontend Group 2',
+    teacher: 'Azizbek Karimov',
+    balance: 250000,
+  },
+  {
+    name: 'Jasur Rahimov',
+    group: 'Python boshlang‘ich',
+    groupEn: 'Python beginners',
+    teacher: 'Golib Abduhalil',
+    balance: 180000,
+  },
+  {
+    name: 'Kamola Rustamova',
+    group: 'React amaliyot',
+    groupEn: 'React practice',
+    teacher: 'Sardor Islomov',
+    balance: 0,
+  },
 ]
 
 type Labels = Record<string, string>
@@ -993,7 +1041,10 @@ function DebtPage({ labels }: { labels: Labels }) {
     { month: labels.locale === 'en' ? 'May' : 'May', value: 3400000 },
     { month: labels.locale === 'en' ? 'Jun' : 'Iyun', value: 3100000 },
     { month: labels.locale === 'en' ? 'Jul' : 'Iyul', value: 2700000 },
-    { month: labels.locale === 'en' ? 'Aug' : 'Avg', value: previousMonthTotal },
+    {
+      month: labels.locale === 'en' ? 'Aug' : 'Avg',
+      value: previousMonthTotal,
+    },
     { month: labels.locale === 'en' ? 'Sep' : 'Sen', value: currentTotal },
   ]
   const topDebtors = [...activeDebts].sort((a, b) => b.amount - a.amount)
@@ -1001,7 +1052,11 @@ function DebtPage({ labels }: { labels: Labels }) {
 
   return (
     <>
-      <Heading labels={labels} title={labels.debt} description={labels.subtitle} />
+      <Heading
+        labels={labels}
+        title={labels.debt}
+        description={labels.subtitle}
+      />
 
       <div className='grid gap-4 md:grid-cols-3'>
         <Card className='overflow-hidden border-rose-500/20 bg-gradient-to-br from-rose-500/[0.09] via-card to-card'>
@@ -1012,9 +1067,14 @@ function DebtPage({ labels }: { labels: Labels }) {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className={`flex items-center gap-2 text-xs font-semibold ${change <= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+            <div
+              className={`flex items-center gap-2 text-xs font-semibold ${change <= 0 ? 'text-emerald-600' : 'text-rose-600'}`}
+            >
               <TrendingDown className='size-4' />
-              {Math.abs(change)}% {labels.locale === 'en' ? 'vs last month' : 'o‘tgan oyga nisbatan'}
+              {Math.abs(change)}%{' '}
+              {labels.locale === 'en'
+                ? 'vs last month'
+                : 'o‘tgan oyga nisbatan'}
             </div>
           </CardContent>
         </Card>
@@ -1026,19 +1086,32 @@ function DebtPage({ labels }: { labels: Labels }) {
           <CardContent>
             <div className='flex items-center gap-2 text-xs text-muted-foreground'>
               <AlertTriangle className='size-4 text-amber-500' />
-              {activeDebts.filter((item) => item.days > 7).length} {labels.locale === 'en' ? 'seriously overdue' : 'jiddiy kechikkan'}
+              {activeDebts.filter((item) => item.days > 7).length}{' '}
+              {labels.locale === 'en'
+                ? 'seriously overdue'
+                : 'jiddiy kechikkan'}
             </div>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className='pb-2'>
-            <CardDescription>{labels.locale === 'en' ? 'Average debt' : 'O‘rtacha qarzdorlik'}</CardDescription>
+            <CardDescription>
+              {labels.locale === 'en' ? 'Average debt' : 'O‘rtacha qarzdorlik'}
+            </CardDescription>
             <CardTitle className='text-3xl'>
-              {format(activeDebts.length ? Math.round(currentTotal / activeDebts.length) : 0)}
+              {format(
+                activeDebts.length
+                  ? Math.round(currentTotal / activeDebts.length)
+                  : 0
+              )}
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className='text-xs text-muted-foreground'>{labels.locale === 'en' ? 'per debtor' : 'har bir qarzdor hisobiga'}</p>
+            <p className='text-xs text-muted-foreground'>
+              {labels.locale === 'en'
+                ? 'per debtor'
+                : 'har bir qarzdor hisobiga'}
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -1048,7 +1121,11 @@ function DebtPage({ labels }: { labels: Labels }) {
           <CardHeader className='border-b border-rose-500/10 bg-gradient-to-r from-rose-500/[0.08] to-transparent'>
             <div className='flex items-center justify-between gap-3'>
               <div>
-                <CardTitle>{labels.locale === 'en' ? 'Debt trend' : 'Qarzdorlik dinamikasi'}</CardTitle>
+                <CardTitle>
+                  {labels.locale === 'en'
+                    ? 'Debt trend'
+                    : 'Qarzdorlik dinamikasi'}
+                </CardTitle>
                 <CardDescription>
                   {labels.locale === 'en'
                     ? 'Outstanding balance over the last six months'
@@ -1063,15 +1140,35 @@ function DebtPage({ labels }: { labels: Labels }) {
           <CardContent className='pt-5'>
             <div className='h-[280px]'>
               <ResponsiveContainer width='100%' height='100%'>
-                <AreaChart data={trend} margin={{ top: 10, right: 8, left: 0, bottom: 0 }}>
+                <AreaChart
+                  data={trend}
+                  margin={{ top: 10, right: 8, left: 0, bottom: 0 }}
+                >
                   <defs>
                     <linearGradient id='debtFill' x1='0' y1='0' x2='0' y2='1'>
-                      <stop offset='0%' stopColor='rgb(244 63 94)' stopOpacity={0.32} />
-                      <stop offset='100%' stopColor='rgb(244 63 94)' stopOpacity={0.02} />
+                      <stop
+                        offset='0%'
+                        stopColor='rgb(244 63 94)'
+                        stopOpacity={0.32}
+                      />
+                      <stop
+                        offset='100%'
+                        stopColor='rgb(244 63 94)'
+                        stopOpacity={0.02}
+                      />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray='3 3' vertical={false} className='stroke-border/60' />
-                  <XAxis dataKey='month' tickLine={false} axisLine={false} className='text-xs' />
+                  <CartesianGrid
+                    strokeDasharray='3 3'
+                    vertical={false}
+                    className='stroke-border/60'
+                  />
+                  <XAxis
+                    dataKey='month'
+                    tickLine={false}
+                    axisLine={false}
+                    className='text-xs'
+                  />
                   <YAxis
                     tickLine={false}
                     axisLine={false}
@@ -1080,10 +1177,23 @@ function DebtPage({ labels }: { labels: Labels }) {
                     className='text-xs'
                   />
                   <Tooltip
-                    formatter={(value: number | undefined) => [format(value ?? 0), labels.debt]}
-                    contentStyle={{ borderRadius: 12, border: '1px solid hsl(var(--border))', background: 'hsl(var(--card))' }}
+                    formatter={(value) => [
+                      format(Number(value ?? 0)),
+                      labels.debt,
+                    ]}
+                    contentStyle={{
+                      borderRadius: 12,
+                      border: '1px solid hsl(var(--border))',
+                      background: 'hsl(var(--card))',
+                    }}
                   />
-                  <Area type='monotone' dataKey='value' stroke='rgb(244 63 94)' strokeWidth={3} fill='url(#debtFill)' />
+                  <Area
+                    type='monotone'
+                    dataKey='value'
+                    stroke='rgb(244 63 94)'
+                    strokeWidth={3}
+                    fill='url(#debtFill)'
+                  />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -1092,9 +1202,15 @@ function DebtPage({ labels }: { labels: Labels }) {
 
         <Card>
           <CardHeader>
-            <CardTitle>{labels.locale === 'en' ? 'Highest debtors' : 'Eng ko‘p qarzdor o‘quvchilar'}</CardTitle>
+            <CardTitle>
+              {labels.locale === 'en'
+                ? 'Highest debtors'
+                : 'Eng ko‘p qarzdor o‘quvchilar'}
+            </CardTitle>
             <CardDescription>
-              {labels.locale === 'en' ? 'Students requiring attention first' : 'Birinchi navbatda e’tibor talab qiladiganlar'}
+              {labels.locale === 'en'
+                ? 'Students requiring attention first'
+                : 'Birinchi navbatda e’tibor talab qiladiganlar'}
             </CardDescription>
           </CardHeader>
           <CardContent className='space-y-5'>
@@ -1107,10 +1223,15 @@ function DebtPage({ labels }: { labels: Labels }) {
                     </span>
                     <span className='truncate font-medium'>{item.student}</span>
                   </div>
-                  <span className='shrink-0 font-bold text-rose-600 dark:text-rose-400'>{format(item.amount)}</span>
+                  <span className='shrink-0 font-bold text-rose-600 dark:text-rose-400'>
+                    {format(item.amount)}
+                  </span>
                 </div>
                 <div className='h-2 overflow-hidden rounded-full bg-rose-500/10'>
-                  <div className='h-full rounded-full bg-gradient-to-r from-rose-500 to-red-600 transition-all' style={{ width: `${(item.amount / maxDebt) * 100}%` }} />
+                  <div
+                    className='h-full rounded-full bg-gradient-to-r from-rose-500 to-red-600 transition-all'
+                    style={{ width: `${(item.amount / maxDebt) * 100}%` }}
+                  />
                 </div>
               </div>
             ))}
@@ -1122,43 +1243,74 @@ function DebtPage({ labels }: { labels: Labels }) {
         <CardHeader className='flex flex-row items-center justify-between pb-4'>
           <div>
             <CardTitle>{labels.debtList}</CardTitle>
-            <CardDescription className='mt-1'>{labels.totalDebt}</CardDescription>
+            <CardDescription className='mt-1'>
+              {labels.totalDebt}
+            </CardDescription>
           </div>
-          <Badge variant='outline' className='border-rose-300 text-rose-600 dark:text-rose-400'>
-            {activeDebts.length} {labels.locale === 'en' ? 'debtors' : 'qarzdor'}
+          <Badge
+            variant='outline'
+            className='border-rose-300 text-rose-600 dark:text-rose-400'
+          >
+            {activeDebts.length}{' '}
+            {labels.locale === 'en' ? 'debtors' : 'qarzdor'}
           </Badge>
         </CardHeader>
         <CardContent className='space-y-3'>
           {debts.map((item) => {
             const isPaid = paid[item.student] ?? false
             return (
-              <div key={item.student} className='flex flex-col gap-3 rounded-xl border p-4 transition-colors hover:bg-muted/20 sm:flex-row sm:items-center sm:justify-between'>
+              <div
+                key={item.student}
+                className='flex flex-col gap-3 rounded-xl border p-4 transition-colors hover:bg-muted/20 sm:flex-row sm:items-center sm:justify-between'
+              >
                 <div className='flex items-center gap-3'>
                   <div className='flex size-10 shrink-0 items-center justify-center rounded-full bg-rose-500/10 text-xs font-bold text-rose-600 dark:text-rose-400'>
-                    {item.student.split(' ').map((n) => n[0]).join('').slice(0, 2)}
+                    {item.student
+                      .split(' ')
+                      .map((n) => n[0])
+                      .join('')
+                      .slice(0, 2)}
                   </div>
                   <div>
-                    <p className='font-semibold text-foreground'>{item.student}</p>
+                    <p className='font-semibold text-foreground'>
+                      {item.student}
+                    </p>
                     <p className='mt-0.5 flex items-center gap-2 text-xs text-muted-foreground'>
-                      <span>{labels.locale === 'en' ? item.groupEn : item.group}</span>
+                      <span>
+                        {labels.locale === 'en' ? item.groupEn : item.group}
+                      </span>
                       <span>•</span>
-                      <span className='font-medium text-amber-600 dark:text-amber-400'>{item.days} {labels.debtDays}</span>
+                      <span className='font-medium text-amber-600 dark:text-amber-400'>
+                        {item.days} {labels.debtDays}
+                      </span>
                     </p>
                   </div>
                 </div>
                 <div className='flex items-center justify-between gap-3 border-t pt-2 sm:justify-end sm:border-t-0 sm:pt-0'>
                   {isPaid ? (
                     <Badge className='gap-1.5 border-green-200 bg-green-500/15 px-3 py-1.5 font-medium text-green-600 dark:border-green-800 dark:text-green-400'>
-                      <CheckCircle2 className='size-3.5' />{labels.paid}
+                      <CheckCircle2 className='size-3.5' />
+                      {labels.paid}
                     </Badge>
                   ) : (
                     <>
-                      <span className='text-base font-bold text-rose-600 dark:text-rose-400'>{format(item.amount)}</span>
-                      <Button size='sm' variant='outline' className='gap-1.5 border-primary/30 hover:bg-primary/10 hover:text-primary' onClick={() => {
-                        setPaid((current) => ({ ...current, [item.student]: true }))
-                        toast.success(labels.debtSettled)
-                      }}>
-                        <CheckCircle2 className='size-3.5 text-primary' />{labels.paidDebt}
+                      <span className='text-base font-bold text-rose-600 dark:text-rose-400'>
+                        {format(item.amount)}
+                      </span>
+                      <Button
+                        size='sm'
+                        variant='outline'
+                        className='gap-1.5 border-primary/30 hover:bg-primary/10 hover:text-primary'
+                        onClick={() => {
+                          setPaid((current) => ({
+                            ...current,
+                            [item.student]: true,
+                          }))
+                          toast.success(labels.debtSettled)
+                        }}
+                      >
+                        <CheckCircle2 className='size-3.5 text-primary' />
+                        {labels.paidDebt}
                       </Button>
                     </>
                   )}
@@ -1175,17 +1327,27 @@ function StudentsPage({ labels }: { labels: Labels }) {
   const [query, setQuery] = useState('')
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null)
   const groupList = Array.from(
-    new Map(students.map((student) => [student.group, {
-      name: student.group,
-      nameEn: student.groupEn,
-      teacher: student.teacher,
-      students: students.filter((item) => item.group === student.group).length,
-      debt: students.filter((item) => item.group === student.group).reduce((sum, item) => sum + item.balance, 0),
-    }])).values()
+    new Map(
+      students.map((student) => [
+        student.group,
+        {
+          name: student.group,
+          nameEn: student.groupEn,
+          teacher: student.teacher,
+          students: students.filter((item) => item.group === student.group)
+            .length,
+          debt: students
+            .filter((item) => item.group === student.group)
+            .reduce((sum, item) => sum + item.balance, 0),
+        },
+      ])
+    ).values()
   )
   const activeGroup = groupList.find((group) => group.name === selectedGroup)
   const filtered = students.filter((student) => {
-    const matchesQuery = student.name.toLowerCase().includes(query.toLowerCase())
+    const matchesQuery = student.name
+      .toLowerCase()
+      .includes(query.toLowerCase())
     return matchesQuery && (!selectedGroup || student.group === selectedGroup)
   })
   const format = (value: number) =>
@@ -1194,32 +1356,77 @@ function StudentsPage({ labels }: { labels: Labels }) {
   if (activeGroup) {
     return (
       <>
-        <Heading labels={labels} title={activeGroup.name} description={labels.subtitle} action={
-          <Button variant='outline' onClick={() => setSelectedGroup(null)}>
-            ← {labels.locale === 'en' ? 'All groups' : 'Barcha guruhlar'}
-          </Button>
-        } />
+        <Heading
+          labels={labels}
+          title={activeGroup.name}
+          description={labels.subtitle}
+          action={
+            <Button variant='outline' onClick={() => setSelectedGroup(null)}>
+              ← {labels.locale === 'en' ? 'All groups' : 'Barcha guruhlar'}
+            </Button>
+          }
+        />
         <div className='grid gap-4 md:grid-cols-3'>
-          <Card><CardHeader className='pb-2'><CardDescription>{labels.students}</CardDescription><CardTitle className='text-3xl'>{activeGroup.students}</CardTitle></CardHeader></Card>
-          <Card><CardHeader className='pb-2'><CardDescription>{labels.locale === 'en' ? 'Teacher' : 'O‘qituvchi'}</CardDescription><CardTitle className='text-lg'>{activeGroup.teacher}</CardTitle></CardHeader></Card>
-          <Card className='border-rose-500/20'><CardHeader className='pb-2'><CardDescription>{labels.debt}</CardDescription><CardTitle className='text-2xl text-rose-600'>{format(activeGroup.debt)}</CardTitle></CardHeader></Card>
+          <Card>
+            <CardHeader className='pb-2'>
+              <CardDescription>{labels.students}</CardDescription>
+              <CardTitle className='text-3xl'>{activeGroup.students}</CardTitle>
+            </CardHeader>
+          </Card>
+          <Card>
+            <CardHeader className='pb-2'>
+              <CardDescription>
+                {labels.locale === 'en' ? 'Teacher' : 'O‘qituvchi'}
+              </CardDescription>
+              <CardTitle className='text-lg'>{activeGroup.teacher}</CardTitle>
+            </CardHeader>
+          </Card>
+          <Card className='border-rose-500/20'>
+            <CardHeader className='pb-2'>
+              <CardDescription>{labels.debt}</CardDescription>
+              <CardTitle className='text-2xl text-rose-600'>
+                {format(activeGroup.debt)}
+              </CardTitle>
+            </CardHeader>
+          </Card>
         </div>
         <Card className='mt-4'>
           <CardHeader>
             <CardTitle>{labels.students}</CardTitle>
             <div className='relative mt-3 max-w-sm'>
               <SearchIcon className='absolute start-3 top-2.5 size-4 text-muted-foreground' />
-              <Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={labels.search} className='ps-9' />
+              <Input
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder={labels.search}
+                className='ps-9'
+              />
             </div>
           </CardHeader>
           <CardContent className='divide-y'>
             {filtered.map((student) => (
-              <div key={student.name} className='flex items-center justify-between gap-3 py-4'>
+              <div
+                key={student.name}
+                className='flex items-center justify-between gap-3 py-4'
+              >
                 <div className='flex items-center gap-3'>
-                  <span className='flex size-9 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary'>{student.name.split(' ').map((n) => n[0]).join('').slice(0,2)}</span>
-                  <div><p className='font-medium'>{student.name}</p><p className='text-xs text-muted-foreground'>{student.teacher}</p></div>
+                  <span className='flex size-9 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary'>
+                    {student.name
+                      .split(' ')
+                      .map((n) => n[0])
+                      .join('')
+                      .slice(0, 2)}
+                  </span>
+                  <div>
+                    <p className='font-medium'>{student.name}</p>
+                    <p className='text-xs text-muted-foreground'>
+                      {student.teacher}
+                    </p>
+                  </div>
                 </div>
-                <Badge variant={student.balance ? 'destructive' : 'secondary'}>{student.balance ? format(student.balance) : labels.paid}</Badge>
+                <Badge variant={student.balance ? 'destructive' : 'secondary'}>
+                  {student.balance ? format(student.balance) : labels.paid}
+                </Badge>
               </div>
             ))}
           </CardContent>
@@ -1230,25 +1437,47 @@ function StudentsPage({ labels }: { labels: Labels }) {
 
   return (
     <>
-      <Heading labels={labels} title={labels.students} description={labels.subtitle} />
+      <Heading
+        labels={labels}
+        title={labels.students}
+        description={labels.subtitle}
+      />
       <div className='grid gap-4 md:grid-cols-2 xl:grid-cols-3'>
         {groupList.map((group) => (
-          <button key={group.name} type='button' onClick={() => setSelectedGroup(group.name)} className='group cursor-pointer text-left'>
+          <button
+            key={group.name}
+            type='button'
+            onClick={() => setSelectedGroup(group.name)}
+            className='group cursor-pointer text-left'
+          >
             <Card className='h-full transition-all duration-200 group-hover:-translate-y-0.5 group-hover:border-primary/40 group-hover:shadow-lg'>
               <CardHeader>
                 <div className='flex items-start justify-between gap-3'>
-                  <div><CardTitle className='text-lg'>{labels.locale === 'en' ? group.nameEn : group.name}</CardTitle><CardDescription>{group.students} {labels.students.toLowerCase()}</CardDescription></div>
-                  <span className='rounded-xl bg-primary/10 p-2 text-primary'><GraduationCap className='size-5' /></span>
+                  <div>
+                    <CardTitle className='text-lg'>
+                      {labels.locale === 'en' ? group.nameEn : group.name}
+                    </CardTitle>
+                    <CardDescription>
+                      {group.students} {labels.students.toLowerCase()}
+                    </CardDescription>
+                  </div>
+                  <span className='rounded-xl bg-primary/10 p-2 text-primary'>
+                    <GraduationCap className='size-5' />
+                  </span>
                 </div>
               </CardHeader>
               <CardContent>
                 <div className='rounded-xl bg-muted/40 p-3'>
-                  <p className='text-xs text-muted-foreground'>{labels.locale === 'en' ? 'Teacher' : 'O‘qituvchi'}</p>
+                  <p className='text-xs text-muted-foreground'>
+                    {labels.locale === 'en' ? 'Teacher' : 'O‘qituvchi'}
+                  </p>
                   <p className='mt-1 font-semibold'>{group.teacher}</p>
                 </div>
                 <div className='mt-3 flex items-center justify-between text-sm'>
                   <span className='text-muted-foreground'>{labels.debt}</span>
-                  <span className='font-bold text-rose-600'>{format(group.debt)}</span>
+                  <span className='font-bold text-rose-600'>
+                    {format(group.debt)}
+                  </span>
                 </div>
               </CardContent>
             </Card>
@@ -1524,7 +1753,7 @@ function RoleSettingsPage({ labels }: { labels: Labels }) {
   return (
     <RoleSettings
       labels={{
-        locale: labels.locale,
+        locale: labels.locale === 'en' ? 'en' : 'uz',
         title: labels.settings,
         description: labels.settingsHint,
         language: labels.locale === 'en' ? 'Language' : 'Til',
@@ -1567,20 +1796,57 @@ function RoleProfilePage({
         <div className='pointer-events-none absolute -end-12 -top-20 size-52 rounded-full bg-primary/10 blur-3xl' />
         <div className='relative flex flex-col gap-4 md:flex-row md:items-end md:justify-between'>
           <div>
-            <p className='text-xs font-semibold uppercase tracking-[0.18em] text-primary'>SFERA IT ACADEMY</p>
-            <h1 className='mt-2 text-2xl font-bold tracking-tight md:text-3xl'>{title}</h1>
-            <p className='mt-1 max-w-2xl text-sm text-muted-foreground'>{description}</p>
+            <p className='text-xs font-semibold tracking-[0.18em] text-primary uppercase'>
+              SFERA IT ACADEMY
+            </p>
+            <h1 className='mt-2 text-2xl font-bold tracking-tight md:text-3xl'>
+              {title}
+            </h1>
+            <p className='mt-1 max-w-2xl text-sm text-muted-foreground'>
+              {description}
+            </p>
           </div>
           <div className='rounded-2xl border bg-background/75 px-4 py-3 text-xs shadow-sm'>
-            <p className='font-semibold'>{english ? 'Finance workspace' : 'Moliya ish maydoni'}</p>
-            <p className='mt-1 text-muted-foreground'>{english ? 'Profile and account identity' : 'Profil va hisob ma’lumotlari'}</p>
+            <p className='font-semibold'>
+              {english ? 'Finance workspace' : 'Moliya ish maydoni'}
+            </p>
+            <p className='mt-1 text-muted-foreground'>
+              {english
+                ? 'Profile and account identity'
+                : 'Profil va hisob ma’lumotlari'}
+            </p>
           </div>
         </div>
       </div>
       <div className='grid gap-4 sm:grid-cols-3'>
-        <Card><CardContent className='p-4'><p className='text-xs text-muted-foreground'>{english ? 'Account' : 'Hisob'}</p><p className='mt-1 font-semibold'>{english ? 'Active' : 'Faol'}</p></CardContent></Card>
-        <Card><CardContent className='p-4'><p className='text-xs text-muted-foreground'>{english ? 'Workspace' : 'Ish maydoni'}</p><p className='mt-1 font-semibold'>{english ? 'Finance' : 'Moliya'}</p></CardContent></Card>
-        <Card><CardContent className='p-4'><p className='text-xs text-muted-foreground'>{english ? 'Security' : 'Xavfsizlik'}</p><p className='mt-1 font-semibold text-emerald-600'>{english ? 'Protected' : 'Himoyalangan'}</p></CardContent></Card>
+        <Card>
+          <CardContent className='p-4'>
+            <p className='text-xs text-muted-foreground'>
+              {english ? 'Account' : 'Hisob'}
+            </p>
+            <p className='mt-1 font-semibold'>{english ? 'Active' : 'Faol'}</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className='p-4'>
+            <p className='text-xs text-muted-foreground'>
+              {english ? 'Workspace' : 'Ish maydoni'}
+            </p>
+            <p className='mt-1 font-semibold'>
+              {english ? 'Finance' : 'Moliya'}
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className='p-4'>
+            <p className='text-xs text-muted-foreground'>
+              {english ? 'Security' : 'Xavfsizlik'}
+            </p>
+            <p className='mt-1 font-semibold text-emerald-600'>
+              {english ? 'Protected' : 'Himoyalangan'}
+            </p>
+          </CardContent>
+        </Card>
       </div>
       <Card className='overflow-hidden'>
         <CardHeader className='border-b bg-muted/[0.16]'>

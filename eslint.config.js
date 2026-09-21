@@ -1,3 +1,4 @@
+
 import globals from 'globals'
 import js from '@eslint/js'
 import pluginQuery from '@tanstack/eslint-plugin-query'
@@ -18,6 +19,11 @@ export default defineConfig(
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
+
+      // ESLint uchun loyiha ildizini aniq belgilash
+      parserOptions: {
+        tsconfigRootDir: import.meta.dirname,
+      },
     },
     plugins: {
       'react-hooks': reactHooks,
@@ -43,7 +49,6 @@ export default defineConfig(
           ignoreRestSiblings: true,
         },
       ],
-      // Enforce type-only imports for TypeScript types
       '@typescript-eslint/consistent-type-imports': [
         'error',
         {
@@ -52,7 +57,7 @@ export default defineConfig(
           disallowTypeAnnotations: false,
         },
       ],
-      // Prevent duplicate imports from the same module
+      
       'no-duplicate-imports': 'error',
     },
   }
