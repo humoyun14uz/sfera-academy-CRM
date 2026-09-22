@@ -13,7 +13,7 @@ export default defineConfig({
     port: 5173,
     strictPort: true,
     // P0-5 FIX: explicit allowlist instead of the previous blanket `allowedHosts: true`
-    allowedHosts: ['localhost', '127.0.0.1'],
+    allowedHosts: ['localhost', '127.0.0.1', '.manus.computer'],
     proxy: {
       '/api/v1': {
         target: 'http://localhost:3000',

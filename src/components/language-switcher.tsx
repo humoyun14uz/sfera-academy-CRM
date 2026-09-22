@@ -19,13 +19,13 @@ export function LanguageSwitcher() {
       <SelectTrigger
         aria-label={t('language')}
         size='sm'
-        className='h-9 min-w-28 gap-2 rounded-lg border border-border/70 bg-background/80 px-2.5 shadow-sm transition-colors hover:border-primary/50 hover:bg-accent/60 focus:ring-2 focus:ring-primary/20'
+        className='h-9 w-9 min-w-9 justify-center gap-2 rounded-lg border border-border/70 bg-background/80 px-0 shadow-sm transition-colors hover:border-primary/50 hover:bg-accent/60 focus:ring-2 focus:ring-primary/20 sm:w-auto sm:min-w-28 sm:justify-start sm:px-2.5'
       >
         <Languages
           className='size-4 shrink-0 text-primary'
           aria-hidden='true'
         />
-        <SelectValue />
+        <SelectValue className='hidden sm:inline' />
       </SelectTrigger>
       <SelectContent
         align='end'

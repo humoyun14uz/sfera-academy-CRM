@@ -18,6 +18,7 @@
 
   body {
     @apply min-h-svh w-full min-w-0 bg-background text-foreground has-[div[data-variant='inset']]:bg-sidebar;
+    font-family: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
     overflow-x: clip;
   }
 

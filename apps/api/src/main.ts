@@ -5,6 +5,7 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
+import { WsAdapter } from '@nestjs/platform-ws'
 import helmet from '@fastify/helmet'
 import { AppModule } from './app.module'
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter'
@@ -18,6 +19,7 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter({ logger: true })
   )
+  app.useWebSocketAdapter(new WsAdapter(app))
 
   // 1. Secure Headers
   // NOTE: `helmet` (from @fastify/helmet) is typed against fastify@5.11.3 while
@@ -70,4 +72,3 @@ bootstrap().catch((err: unknown) => {
   )
   process.exit(1)
 })
-
