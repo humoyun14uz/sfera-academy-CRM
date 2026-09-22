@@ -1,6 +1,7 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, lazyRouteComponent } from '@tanstack/react-router'
 import { requirePermission } from '@/lib/route-guard'
-import { Chats } from '@/features/chats'
+
+const Chats = lazyRouteComponent(() => import('@/features/chats'), 'Chats')
 
 export const Route = createFileRoute('/_authenticated/chats/')({
   beforeLoad: () => requirePermission('messages.read'),

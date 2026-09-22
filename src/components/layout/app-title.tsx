@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router'
-import academyDarkLogo from '@/assets/sfera-it-academy-logo-dark.png'
-import academyLogo from '@/assets/sfera-it-academy-logo.png'
+import academyDarkLogo from '@/assets/sfera-it-academy-logo-dark.webp'
+import academyLogo from '@/assets/sfera-it-academy-logo.webp'
 import { useAuthStore } from '@/stores/auth-store'
 import { getPrimaryRole } from '@/lib/rbac'
 import { useLanguage } from '@/context/language-provider'
