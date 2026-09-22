@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { Link } from '@tanstack/react-router'
-import academyLogo from '@/assets/sfera-it-academy-logo.png'
+import academyLogo from '@/assets/sfera-it-academy-logo.webp'
 import { getCookie } from '@/lib/cookies'
 import { useLanguage } from '@/context/language-provider'
 
@@ -74,7 +74,7 @@ export function AuthLayout({ children }: AuthLayoutProps) {
         </div>
       </section>
 
-      <section className='relative flex min-h-svh min-w-0 items-center justify-center overflow-y-auto bg-[radial-gradient(circle_at_90%_8%,rgba(16,185,129,0.12),transparent_30%),linear-gradient(135deg,#f5fcfa_0%,#eef8f4_100%)] p-5 sm:p-10 lg:min-h-0 lg:overflow-hidden'>
+      <main className='relative flex min-h-svh min-w-0 items-center justify-center overflow-y-auto bg-[radial-gradient(circle_at_90%_8%,rgba(16,185,129,0.12),transparent_30%),linear-gradient(135deg,#f5fcfa_0%,#eef8f4_100%)] p-5 sm:p-10 lg:min-h-0 lg:overflow-hidden'>
         <div className='pointer-events-none absolute -end-20 -top-20 size-64 rounded-full border-[20px] border-emerald-100/60' />
         <div className='relative my-auto w-full max-w-[430px] lg:px-1'>
           <div className='mb-8 flex items-center gap-3 lg:hidden'>
@@ -87,7 +87,7 @@ export function AuthLayout({ children }: AuthLayoutProps) {
           </div>
           <p className='mt-5 text-center text-xs text-slate-400'>{t('appName')} · {t('loginFooter')}</p>
         </div>
-      </section>
+      </main>
     </div>
   )
 }

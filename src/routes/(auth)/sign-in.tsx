@@ -1,6 +1,10 @@
 import { z } from 'zod'
-import { createFileRoute } from '@tanstack/react-router'
-import { SignIn } from '@/features/auth/sign-in'
+import { createFileRoute, lazyRouteComponent } from '@tanstack/react-router'
+
+const SignIn = lazyRouteComponent(
+  () => import('@/features/auth/sign-in'),
+  'SignIn'
+)
 
 const searchSchema = z.object({
   redirect: z.string().optional(),

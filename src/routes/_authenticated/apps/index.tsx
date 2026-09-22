@@ -1,7 +1,11 @@
 import z from 'zod'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, lazyRouteComponent } from '@tanstack/react-router'
 import { requirePermission } from '@/lib/route-guard'
-import { Courses } from '@/features/courses'
+
+const Courses = lazyRouteComponent(
+  () => import('@/features/courses'),
+  'Courses'
+)
 
 const appsSearchSchema = z.object({
   type: z

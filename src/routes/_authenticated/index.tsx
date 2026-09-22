@@ -1,9 +1,20 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
-import { Dashboard } from '@/features/dashboard'
-import { StudentDashboard } from '@/features/student/student-dashboard'
+import {
+  createFileRoute,
+  lazyRouteComponent,
+  redirect,
+} from '@tanstack/react-router'
+import { useAuthStore } from '@/stores/auth-store'
 import { getPrimaryRole } from '@/lib/rbac'
 import { requireAuthenticated } from '@/lib/route-guard'
-import { useAuthStore } from '@/stores/auth-store'
+
+const Dashboard = lazyRouteComponent(
+  () => import('@/features/dashboard'),
+  'Dashboard'
+)
+const StudentDashboard = lazyRouteComponent(
+  () => import('@/features/student/student-dashboard'),
+  'StudentDashboard'
+)
 
 export const Route = createFileRoute('/_authenticated/')({
   beforeLoad: () => {

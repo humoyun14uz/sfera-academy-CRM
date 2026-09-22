@@ -1,0 +1,3 @@
+# Sfera IT Academy CRM
+
+Sfera IT Academy o‘quv markazi uchun ichki boshqaruv CRM tizimi.

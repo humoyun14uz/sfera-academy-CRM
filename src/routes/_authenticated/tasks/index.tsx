@@ -1,8 +1,9 @@
 import z from 'zod'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, lazyRouteComponent } from '@tanstack/react-router'
 import { requirePermission } from '@/lib/route-guard'
-import { Tasks } from '@/features/tasks'
 import { priorities, statuses } from '@/features/tasks/data/data'
+
+const Tasks = lazyRouteComponent(() => import('@/features/tasks'), 'Tasks')
 
 const taskSearchSchema = z.object({
   page: z.number().optional().catch(1),
