@@ -6,7 +6,7 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets'
 import { Inject, Logger } from '@nestjs/common'
-import type { Server, WebSocket } from 'ws'
+import { Server, WebSocket } from 'ws'
 import { NotificationsRealtimeService } from './notifications-realtime.service'
 import { NotificationsSocketAuth } from './notifications-socket-auth.service'
 

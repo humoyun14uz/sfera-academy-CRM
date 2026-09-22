@@ -5,7 +5,7 @@ import {
   academyMemberships,
   roles,
   users,
-  type createDb,
+  createDb,
 } from '@sfera/db'
 
 export type NotificationSocketIdentity = {

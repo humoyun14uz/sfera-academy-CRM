@@ -1,8 +1,8 @@
 import { Inject, Injectable, Logger } from '@nestjs/common'
-import type { WebSocket } from 'ws'
-import { notifications, type createDb } from '@sfera/db'
+import { WebSocket } from 'ws'
+import { notifications, createDb } from '@sfera/db'
 import { desc, eq, and } from 'drizzle-orm'
-import type { NotificationSocketIdentity } from './notifications-socket-auth.service'
+import { NotificationSocketIdentity } from './notifications-socket-auth.service'
 
 export type RealtimeNotification = {
   id: string
