@@ -25,7 +25,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
-import { useCrmStore } from '@/lib/crm-store'
+import { useApiStore } from '@/lib/api-store'
 import { useAuthStore } from '@/stores/auth-store'
 import { getPrimaryRole } from '@/lib/rbac'
 import { formatCurrency, useLanguage } from '@/context/language-provider'
@@ -59,22 +59,61 @@ const COLORS = [
   '#8b5cf6',
   '#64748b',
 ]
-const revenueSeries = [
-  { month: 'Apr', collected: 6200000, pending: 900000 },
-  { month: 'May', collected: 7400000, pending: 1200000 },
-  { month: 'Jun', collected: 8100000, pending: 1000000 },
-  { month: 'Jul', collected: 9300000, pending: 1300000 },
-  { month: 'Aug', collected: 10600000, pending: 1600000 },
-  { month: 'Sep', collected: 0, pending: 0 },
-]
 
 export function Dashboard() {
   const { language, t } = useLanguage()
-  const crm = useCrmStore()
+  const crm = useApiStore()
   const user = useAuthStore((state) => state.auth.user)
   const role = getPrimaryRole(user?.role)
   const [range, setRange] = useState('this-month')
   const en = language === 'en'
+
+  if (crm.isLoading) {
+    return (
+      <>
+        <Header>
+          <TopNav links={[{ title: t('executiveOverview'), href: '/', isActive: true }]} />
+          <Search />
+          <ThemeSwitch />
+        </Header>
+        <Main>
+          <div className='space-y-4'>
+            <div className='h-9 w-64 rounded-lg bg-muted animate-pulse' />
+            <div className='h-10 w-96 rounded-lg bg-muted animate-pulse' />
+            <div className='grid gap-4 sm:grid-cols-2 xl:grid-cols-3'>
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className='h-28 rounded-xl border bg-muted/30 animate-pulse' />
+              ))}
+            </div>
+          </div>
+        </Main>
+      </>
+    )
+  }
+
+  if (crm.isError) {
+    return (
+      <>
+        <Header>
+          <TopNav links={[{ title: t('executiveOverview'), href: '/', isActive: true }]} />
+          <Search />
+          <ThemeSwitch />
+        </Header>
+        <Main>
+          <Card>
+            <CardHeader>
+              <CardTitle>Failed to load data</CardTitle>
+              <CardDescription>Please try again or contact support.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button onClick={crm.refetch}>Retry</Button>
+            </CardContent>
+          </Card>
+        </Main>
+      </>
+    )
+  }
+
   const monthLabel = (month: number) =>
     new Intl.DateTimeFormat(en ? 'en-US' : 'uz-UZ', { month: 'short' }).format(
       new Date(2026, month, 1)
@@ -88,6 +127,11 @@ export function Dashboard() {
       bank: t('bankTransfer'),
       bank_transfer: t('bankTransfer'),
     })[method.toLowerCase()] || method
+  const collectedRevenue = (crm.financeSummary as Record<string, number> | null)?.collectedRevenue ?? 0
+  const outstandingBalance = (crm.financeSummary as Record<string, number> | null)?.outstandingBalance ?? 0
+  const revenueSeries = collectedRevenue || outstandingBalance
+    ? [{ month: en ? 'This Month' : 'Bu Oy', collected: collectedRevenue, pending: outstandingBalance }]
+    : []
   const activeStudents = crm.students.filter(
     (student) => student.status === 'active'
   )

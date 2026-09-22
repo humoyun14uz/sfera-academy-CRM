@@ -65,6 +65,13 @@ export class FinanceController {
     return this.financeService.createInvoice(user.academyId, dto, user.id)
   }
 
+  @Get('payments')
+  @RequirePermission('finance.payments.read')
+  @ApiOperation({ summary: 'List payment transactions in academy' })
+  async listPayments(@CurrentUser() user: AuthenticatedUser) {
+    return this.financeService.listPayments(user.academyId)
+  }
+
   @Post('payments')
   @RequirePermission('finance.payments.create')
   @UsePipes(new ZodValidationPipe(recordPaymentSchema))

@@ -69,8 +69,14 @@ export default defineConfig(
           disallowTypeAnnotations: false,
         },
       ],
-      
+
       'no-duplicate-imports': 'error',
+    },
+  },
+  {
+    files: ['src/api/**/*.ts'],
+    rules: {
+      'react-hooks/rules-of-hooks': 'off',
     },
   },
   {

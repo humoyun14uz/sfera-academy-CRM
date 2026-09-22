@@ -42,7 +42,7 @@ export const sidebarData: SidebarData = {
         { title: 'O‘qituvchilar', url: '/academy/teachers', icon: GraduationCap, permission: 'teachers.read' },
         { title: 'Jadval', url: '/academy/schedule', icon: CalendarDays, permission: 'groups.manage_schedule' },
         { title: 'Davomat', url: '/academy/attendance', icon: CheckCircle2, permission: 'students.read' },
-        { title: 'Moliya', url: '/academy/finance', icon: Star, permission: 'payments.read' },
+        { title: 'Moliya', url: '/academy/finance', icon: Star, permission: 'finance.payments.read' },
         { title: 'Hisobotlar', url: '/academy/reports', icon: BarChart3, permission: 'reports.read' },
       ],
     },
@@ -50,7 +50,7 @@ export const sidebarData: SidebarData = {
       title: 'Management',
       items: [
         { title: 'Vazifalar', url: '/tasks', icon: ListTodo, permission: 'tasks.read' },
-        { title: 'Rollar va huquqlar', url: '/users/manage', icon: ShieldCheck, permission: 'users.change_role' },
+        { title: 'Rollar va huquqlar', url: '/users/manage', icon: ShieldCheck, permission: 'users.assign_role' },
       ],
     },
     {

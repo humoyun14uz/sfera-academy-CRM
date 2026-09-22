@@ -36,7 +36,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end' className='w-40'>
-          <PermissionGate permission='users.change_role'>
+          <PermissionGate permission='users.assign_role'>
             <DropdownMenuItem
               onClick={() => {
                 setCurrentRow(row.original)
@@ -49,7 +49,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
               </DropdownMenuShortcut>
             </DropdownMenuItem>
           </PermissionGate>
-          <PermissionGate permission='users.deactivate'>
+          <PermissionGate permission='users.delete'>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => {

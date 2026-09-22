@@ -320,6 +320,30 @@ export class FinanceService {
     return result
   }
 
+  async listPayments(academyId: string) {
+    return this.db
+      .select({
+        id: payments.id,
+        invoiceId: payments.invoiceId,
+        studentId: payments.studentId,
+        studentFirstName: students.firstName,
+        studentLastName: students.lastName,
+        amount: payments.amount,
+        paymentMethod: payments.paymentMethod,
+        referenceNumber: payments.referenceNumber,
+        status: payments.status,
+        source: payments.source,
+        receivedBy: payments.receivedBy,
+        description: payments.description,
+        paidAt: payments.paidAt,
+        createdAt: payments.createdAt,
+      })
+      .from(payments)
+      .innerJoin(students, eq(payments.studentId, students.id))
+      .where(eq(payments.academyId, academyId))
+      .orderBy(desc(payments.createdAt))
+  }
+
   async refundPayment(
     academyId: string,
     dto: RefundPaymentDto,

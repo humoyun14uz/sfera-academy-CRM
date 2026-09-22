@@ -1933,7 +1933,7 @@ export function academyModulePermission(moduleId: string) {
     | 'teachers.read'
     | 'groups.manage_schedule'
     | 'students.read'
-    | 'payments.read'
+    | 'finance.payments.read'
     | 'reports.read'
   > = {
     leads: 'leads.read',
@@ -1941,7 +1941,7 @@ export function academyModulePermission(moduleId: string) {
     teachers: 'teachers.read',
     schedule: 'groups.manage_schedule',
     attendance: 'students.read',
-    finance: 'payments.read',
+    finance: 'finance.payments.read',
     reports: 'reports.read',
   }
   return permissions[moduleId] ?? 'dashboard.read'
