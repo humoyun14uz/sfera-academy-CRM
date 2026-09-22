@@ -4,14 +4,14 @@ import {
   ForbiddenException,
 } from '@nestjs/common'
 import {
-  type createDb,
+  createDb,
   attendanceSessions,
   attendanceRecords,
   groupTeachers,
 } from '@sfera/db'
 import { eq, and } from 'drizzle-orm'
-import { type MarkAttendanceSessionDto } from '@sfera/contracts'
-import { type AuditLogsService } from '../audit-logs/audit-logs.service'
+import { MarkAttendanceSessionDto } from '@sfera/contracts'
+import { AuditLogsService } from '../audit-logs/audit-logs.service'
 
 @Injectable()
 export class AttendanceService {

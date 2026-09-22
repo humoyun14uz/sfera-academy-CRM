@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { Reflector } from '@nestjs/core'
-import { type ExecutionContext, ForbiddenException } from '@nestjs/common'
+import { ExecutionContext, ForbiddenException } from '@nestjs/common'
 import { RbacGuard } from '../src/common/guards/rbac.guard'
 import { DEFAULT_ROLE_PERMISSIONS } from '@sfera/contracts'
 

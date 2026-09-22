@@ -1,8 +1,8 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common'
-import { type createDb, students, enrollments, groups, courses } from '@sfera/db'
+import { createDb, students, enrollments, groups, courses } from '@sfera/db'
 import { eq, and } from 'drizzle-orm'
-import { type CreateStudentDto } from '@sfera/contracts'
-import { type AuditLogsService } from '../audit-logs/audit-logs.service'
+import { CreateStudentDto } from '@sfera/contracts'
+import { AuditLogsService } from '../audit-logs/audit-logs.service'
 
 @Injectable()
 export class StudentsService {

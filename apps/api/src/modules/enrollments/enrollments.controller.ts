@@ -1,11 +1,11 @@
 import { Controller, Post, Body, UseGuards, UsePipes } from '@nestjs/common'
-import { type EnrollmentsService } from './enrollments.service'
+import { EnrollmentsService } from './enrollments.service'
 import { ClerkAuthGuard } from '../../common/guards/clerk-auth.guard'
 import { RbacGuard } from '../../common/guards/rbac.guard'
 import { RequirePermission } from '../../common/decorators/require-permission.decorator'
-import { CurrentUser, type AuthenticatedUser } from '../../common/decorators/current-user.decorator'
+import { CurrentUser, AuthenticatedUser } from '../../common/decorators/current-user.decorator'
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe'
-import { createEnrollmentSchema, type CreateEnrollmentDto } from '@sfera/contracts'
+import { createEnrollmentSchema, CreateEnrollmentDto } from '@sfera/contracts'
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger'
 
 @ApiTags('Enrollments')

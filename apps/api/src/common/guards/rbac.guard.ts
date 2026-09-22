@@ -1,17 +1,17 @@
 import {
   Injectable,
-  type CanActivate,
-  type ExecutionContext,
+  CanActivate,
+  ExecutionContext,
   ForbiddenException,
 } from '@nestjs/common'
-import { type Reflector } from '@nestjs/core'
+import { Reflector } from '@nestjs/core'
 import {
   PERMISSIONS_KEY,
   ROLES_KEY,
   IS_PUBLIC_KEY,
 } from '../decorators/require-permission.decorator'
-import { type SystemPermission, type SystemRole } from '@sfera/contracts'
-import { type AuthenticatedUser } from '../decorators/current-user.decorator'
+import { SystemPermission, SystemRole } from '@sfera/contracts'
+import { AuthenticatedUser } from '../decorators/current-user.decorator'
 
 @Injectable()
 export class RbacGuard implements CanActivate {

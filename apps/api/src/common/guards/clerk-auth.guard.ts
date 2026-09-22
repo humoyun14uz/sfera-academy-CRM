@@ -1,17 +1,17 @@
 import {
   Injectable,
-  type CanActivate,
-  type ExecutionContext,
+  CanActivate,
+  ExecutionContext,
   UnauthorizedException,
   Inject,
 } from '@nestjs/common'
-import { type Reflector } from '@nestjs/core'
+import { Reflector } from '@nestjs/core'
 import { createClerkClient, verifyToken } from '@clerk/backend'
 import { IS_PUBLIC_KEY } from '../decorators/require-permission.decorator'
-import { type createDb, users, academyMemberships, roles, rolePermissions, permissions } from '@sfera/db'
+import { createDb, users, academyMemberships, roles, rolePermissions, permissions } from '@sfera/db'
 import { eq, and } from 'drizzle-orm'
-import { type AuthenticatedUser } from '../decorators/current-user.decorator'
-import { type SystemRole } from '@sfera/contracts'
+import { AuthenticatedUser } from '../decorators/current-user.decorator'
+import { SystemRole } from '@sfera/contracts'
 
 @Injectable()
 export class ClerkAuthGuard implements CanActivate {

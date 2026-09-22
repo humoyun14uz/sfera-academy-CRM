@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { Reflector } from '@nestjs/core'
-import { type ExecutionContext, ForbiddenException } from '@nestjs/common'
+import { ExecutionContext, ForbiddenException } from '@nestjs/common'
 import { ScopeGuard } from '../src/common/guards/scope.guard'
 
 describe('ScopeGuard (Multi-Tenant, Teacher & Student Scope Enforcement)', () => {

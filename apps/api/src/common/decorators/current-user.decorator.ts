@@ -1,5 +1,5 @@
-import { createParamDecorator, type ExecutionContext } from '@nestjs/common'
-import { type SystemRole } from '@sfera/contracts'
+import { createParamDecorator, ExecutionContext } from '@nestjs/common'
+import { SystemRole } from '@sfera/contracts'
 
 export interface AuthenticatedUser {
   id: string

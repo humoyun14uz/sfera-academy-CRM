@@ -1,5 +1,5 @@
 import { SetMetadata } from '@nestjs/common'
-import { type SystemPermission, type SystemRole } from '@sfera/contracts'
+import { SystemPermission, SystemRole } from '@sfera/contracts'
 
 export const PERMISSIONS_KEY = 'permissions'
 export const RequirePermission = (...permissions: SystemPermission[]) =>

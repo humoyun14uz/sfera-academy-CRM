@@ -1,14 +1,14 @@
 import {
-  type ExceptionFilter,
+  ExceptionFilter,
   Catch,
-  type ArgumentsHost,
+  ArgumentsHost,
   HttpException,
   HttpStatus,
   Logger,
 } from '@nestjs/common'
-import { type FastifyReply, type FastifyRequest } from 'fastify'
+import { FastifyReply, FastifyRequest } from 'fastify'
 import { ZodError } from 'zod'
-import { type ApiResponseError } from '@sfera/contracts'
+import { ApiResponseError } from '@sfera/contracts'
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {

@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common'
-import { type AuthService } from './auth.service'
+import { AuthService } from './auth.service'
 import { ClerkAuthGuard } from '../../common/guards/clerk-auth.guard'
-import { CurrentUser, type AuthenticatedUser } from '../../common/decorators/current-user.decorator'
+import { CurrentUser, AuthenticatedUser } from '../../common/decorators/current-user.decorator'
 import { Public } from '../../common/decorators/require-permission.decorator'
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger'
 

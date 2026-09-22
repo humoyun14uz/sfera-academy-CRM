@@ -4,7 +4,7 @@ import {
   SYSTEM_ROLES,
   ALL_PERMISSIONS,
   DEFAULT_ROLE_PERMISSIONS,
-  type SystemRole,
+  SystemRole,
 } from '@sfera/contracts'
 import { eq } from 'drizzle-orm'
 

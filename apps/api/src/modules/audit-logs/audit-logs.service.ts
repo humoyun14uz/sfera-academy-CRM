@@ -1,5 +1,5 @@
 import { Injectable, Inject, Logger } from '@nestjs/common'
-import { type createDb, auditLogs } from '@sfera/db'
+import { createDb, auditLogs } from '@sfera/db'
 import { desc, eq } from 'drizzle-orm'
 
 export interface LogAuditParams {

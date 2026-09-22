@@ -1,13 +1,13 @@
 import {
   Injectable,
-  type CanActivate,
-  type ExecutionContext,
+  CanActivate,
+  ExecutionContext,
   ForbiddenException,
   Inject,
 } from '@nestjs/common'
-import { type Reflector } from '@nestjs/core'
-import { type AuthenticatedUser } from '../decorators/current-user.decorator'
-import { type createDb, groupTeachers, students } from '@sfera/db'
+import { Reflector } from '@nestjs/core'
+import { AuthenticatedUser } from '../decorators/current-user.decorator'
+import { createDb, groupTeachers, students } from '@sfera/db'
 import { eq, and } from 'drizzle-orm'
 
 @Injectable()

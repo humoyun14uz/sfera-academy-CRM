@@ -4,10 +4,10 @@ import {
   NotFoundException,
   ForbiddenException,
 } from '@nestjs/common'
-import { type createDb, grades, gradeHistory, groupTeachers } from '@sfera/db'
+import { createDb, grades, gradeHistory, groupTeachers } from '@sfera/db'
 import { eq, and } from 'drizzle-orm'
-import { type CreateGradeDto, type UpdateGradeDto } from '@sfera/contracts'
-import { type AuditLogsService } from '../audit-logs/audit-logs.service'
+import { CreateGradeDto, UpdateGradeDto } from '@sfera/contracts'
+import { AuditLogsService } from '../audit-logs/audit-logs.service'
 
 @Injectable()
 export class GradesService {

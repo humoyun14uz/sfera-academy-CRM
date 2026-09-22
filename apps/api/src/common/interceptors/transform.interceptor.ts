@@ -1,12 +1,12 @@
 import {
   Injectable,
-  type NestInterceptor,
-  type ExecutionContext,
-  type CallHandler,
+  NestInterceptor,
+  ExecutionContext,
+  CallHandler,
 } from '@nestjs/common'
-import { type Observable } from 'rxjs'
+import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
-import { type ApiResponseSuccess } from '@sfera/contracts'
+import { ApiResponseSuccess } from '@sfera/contracts'
 
 @Injectable()
 export class TransformInterceptor<T>

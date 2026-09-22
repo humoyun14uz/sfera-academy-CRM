@@ -1,7 +1,7 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common'
-import { type createDb, users, academyMemberships, academies, roles, rolePermissions, permissions } from '@sfera/db'
+import { createDb, users, academyMemberships, academies, roles, rolePermissions, permissions } from '@sfera/db'
 import { eq, and } from 'drizzle-orm'
-import { type AuditLogsService } from '../audit-logs/audit-logs.service'
+import { AuditLogsService } from '../audit-logs/audit-logs.service'
 
 @Injectable()
 export class AuthService {

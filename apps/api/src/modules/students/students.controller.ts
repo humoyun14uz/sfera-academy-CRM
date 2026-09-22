@@ -1,12 +1,12 @@
 import { Controller, Get, Post, Body, Param, UseGuards, UsePipes } from '@nestjs/common'
-import { type StudentsService } from './students.service'
+import { StudentsService } from './students.service'
 import { ClerkAuthGuard } from '../../common/guards/clerk-auth.guard'
 import { RbacGuard } from '../../common/guards/rbac.guard'
 import { ScopeGuard } from '../../common/guards/scope.guard'
 import { RequirePermission } from '../../common/decorators/require-permission.decorator'
-import { CurrentUser, type AuthenticatedUser } from '../../common/decorators/current-user.decorator'
+import { CurrentUser, AuthenticatedUser } from '../../common/decorators/current-user.decorator'
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe'
-import { createStudentSchema, type CreateStudentDto } from '@sfera/contracts'
+import { createStudentSchema, CreateStudentDto } from '@sfera/contracts'
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger'
 
 @ApiTags('Students')

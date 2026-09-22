@@ -5,7 +5,7 @@ import {
   BadRequestException,
 } from '@nestjs/common'
 import {
-  type createDb,
+  createDb,
   invoices,
   invoiceCounters,
   invoiceItems,
@@ -15,11 +15,11 @@ import {
 } from '@sfera/db'
 import { eq, and, sql, desc, gte, lte, ne } from 'drizzle-orm'
 import {
-  type CreateInvoiceDto,
-  type RecordPaymentDto,
-  type RefundPaymentDto,
+  CreateInvoiceDto,
+  RecordPaymentDto,
+  RefundPaymentDto,
 } from '@sfera/contracts'
-import { type AuditLogsService } from '../audit-logs/audit-logs.service'
+import { AuditLogsService } from '../audit-logs/audit-logs.service'
 
 @Injectable()
 export class FinanceService {

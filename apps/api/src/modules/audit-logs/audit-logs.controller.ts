@@ -1,9 +1,9 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common'
-import { type AuditLogsService } from './audit-logs.service'
+import { AuditLogsService } from './audit-logs.service'
 import { ClerkAuthGuard } from '../../common/guards/clerk-auth.guard'
 import { RbacGuard } from '../../common/guards/rbac.guard'
 import { RequirePermission } from '../../common/decorators/require-permission.decorator'
-import { CurrentUser, type AuthenticatedUser } from '../../common/decorators/current-user.decorator'
+import { CurrentUser, AuthenticatedUser } from '../../common/decorators/current-user.decorator'
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger'
 
 @ApiTags('Audit Logs')

@@ -100,6 +100,16 @@ export default defineConfig(
       ],
       '@typescript-eslint/no-explicit-any': 'warn',
       'no-duplicate-imports': 'error',
+      // NestJS resolves injected services/guards through `design:paramtypes`
+      // metadata emitted at compile time. That metadata only carries a class
+      // reference when the class is imported as a VALUE, so `import type` here
+      // silently breaks dependency injection (AuthService, all *Service
+      // injections, Reflector in guards, ...). For the backend we therefore
+      // require plain value imports for everything.
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        { prefer: 'no-type-imports', fixStyle: 'inline-type-imports' },
+      ],
     },
   },
   {

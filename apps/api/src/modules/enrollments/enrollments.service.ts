@@ -5,7 +5,7 @@ import {
   ConflictException,
 } from '@nestjs/common'
 import {
-  type createDb,
+  createDb,
   enrollments,
   students,
   groups,
@@ -13,8 +13,8 @@ import {
   invoices,
 } from '@sfera/db'
 import { eq, and } from 'drizzle-orm'
-import { type CreateEnrollmentDto } from '@sfera/contracts'
-import { type AuditLogsService } from '../audit-logs/audit-logs.service'
+import { CreateEnrollmentDto } from '@sfera/contracts'
+import { AuditLogsService } from '../audit-logs/audit-logs.service'
 
 @Injectable()
 export class EnrollmentsService {

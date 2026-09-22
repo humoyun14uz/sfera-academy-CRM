@@ -1,11 +1,11 @@
 import { Controller, Get, Post, Body, Param, UseGuards, UsePipes } from '@nestjs/common'
-import { type AcademiesService } from './academies.service'
+import { AcademiesService } from './academies.service'
 import { ClerkAuthGuard } from '../../common/guards/clerk-auth.guard'
 import { RbacGuard } from '../../common/guards/rbac.guard'
 import { RequirePermission } from '../../common/decorators/require-permission.decorator'
-import { CurrentUser, type AuthenticatedUser } from '../../common/decorators/current-user.decorator'
+import { CurrentUser, AuthenticatedUser } from '../../common/decorators/current-user.decorator'
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe'
-import { createAcademySchema, type CreateAcademyDto } from '@sfera/contracts'
+import { createAcademySchema, CreateAcademyDto } from '@sfera/contracts'
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger'
 
 @ApiTags('Academies')

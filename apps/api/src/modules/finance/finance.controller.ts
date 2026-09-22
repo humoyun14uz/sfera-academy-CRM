@@ -8,20 +8,20 @@ import {
   UsePipes,
   ForbiddenException,
 } from '@nestjs/common'
-import { type FinanceService } from './finance.service'
+import { FinanceService } from './finance.service'
 import { ClerkAuthGuard } from '../../common/guards/clerk-auth.guard'
 import { RbacGuard } from '../../common/guards/rbac.guard'
 import { ScopeGuard } from '../../common/guards/scope.guard'
 import { RequirePermission } from '../../common/decorators/require-permission.decorator'
-import { CurrentUser, type AuthenticatedUser } from '../../common/decorators/current-user.decorator'
+import { CurrentUser, AuthenticatedUser } from '../../common/decorators/current-user.decorator'
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe'
 import {
   createInvoiceSchema,
-  type CreateInvoiceDto,
+  CreateInvoiceDto,
   recordPaymentSchema,
-  type RecordPaymentDto,
+  RecordPaymentDto,
   refundPaymentSchema,
-  type RefundPaymentDto,
+  RefundPaymentDto,
 } from '@sfera/contracts'
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger'
 
