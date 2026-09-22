@@ -12,6 +12,7 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 5173,
     strictPort: true,
+    allowedHosts: true,
     // P0-5 FIX: explicit allowlist instead of the previous blanket `allowedHosts: true`
     allowedHosts: ['localhost', '127.0.0.1'],
     proxy: {
