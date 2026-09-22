@@ -132,18 +132,39 @@ All commands were run from the repository root on Windows / PowerShell.
 | 7 | `pnpm --filter @sfera/api build` | **0** | `API_BUILD_EXIT=0`, `dist/main.js` present, 265 files emitted |
 | 8 | `pnpm --filter @sfera/api test` | **0** | `Test Files 2 passed (2)`, `Tests 9 passed (9)` |
 | 9 | `pnpm --filter @sfera/db generate` | **0** | `35 tables`, `drizzle\0000_broad_vance_astro.sql` |
-| 10 | `pnpm test` | see §3.1 | frontend browser suite — results recorded below |
+| 10 | `pnpm test` | see §3.1 | 5 unit test files pass (36 tests); **15 browser component test files fail** with ~15 s Radix timeouts (pre-existing, documented as P1-8) |
 
 ### 3.1 Frontend test suite — still failing, and why
 
-Running the frontend suite with the **corrected scope** stops double-executing the nested worktree
-copy, but the project's own Radix dialog/sheet tests still time out at roughly 15 000 ms per test
-(10 failures across `users-delete-dialog.test.tsx` and `tasks-mutate-drawer.test.tsx`).
-These are **real failures about to be deleted along with the code they test**: both files test
-`__screenshots__`-era demo dialogs that read/write `localStorage` and show a success toast with no
-server confirmation — the exact behaviour Phase 6 removes. Rewriting them now would mean writing
-throwaway tests for code scheduled for deletion, so they are left failing and **explicitly visible**
-rather than skipped or silenced.
+Running the frontend suite with the **corrected scope** confirms the nested-worktree duplication is
+gone (no `.kilo/worktrees/**` file appears any more). The honest result:
+
+**Pure unit tests — all pass:**
+
+| File | Tests |
+|---|---|
+| `src/hooks/use-table-url-state.test.ts` | 17 ✅ |
+| `src/lib/handle-server-error.test.ts` | 7 ✅ |
+| `src/stores/auth-store.test.ts` | 5 ✅ |
+| `src/lib/utils.test.ts` | 5 ✅ |
+| `src/lib/cookies.test.ts` | 2 ✅ |
+
+**Browser component tests — all 15 files fail**, each test timing out at ~15 000 ms:
+
+`src/components/confirm-dialog.test.tsx`, `password-input.test.tsx`, `sign-out-dialog.test.tsx`,
+`src/context/search-provider.test.tsx`,
+`src/features/auth/{sign-in,sign-up,otp,forgot-password}/**/*.test.tsx`,
+`src/features/tasks/components/{tasks-mutate-drawer,tasks-import-dialog,tasks-multi-delete-dialog}.test.tsx`,
+`src/features/users/components/{users-action-dialog,users-delete-dialog,users-invite-dialog,users-multi-delete-dialog}.test.tsx`.
+
+This is finding **P1-8 / P3-2**: Radix portal + animation waits under
+`vitest --browser.headless` never resolve. These are **real failures, not environment noise**, and
+they sit on demo dialogs that read and write `localStorage` and fire `toast.success(...)` with no
+server confirmation — precisely the behaviour Phase 6 deletes.
+
+They are therefore left **failing and fully visible**. They are not skipped, not silenced, and not
+rewritten as throwaway tests for code that is scheduled for removal. Fixing them properly means
+asserting against the real API after the migration, which is Phase 6/8 work.
 
 ---
 
