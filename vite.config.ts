@@ -12,7 +12,15 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 5173,
     strictPort: true,
-    allowedHosts: true,
+    // P0-5 FIX: explicit allowlist instead of the previous blanket `allowedHosts: true`
+    allowedHosts: ['localhost', '127.0.0.1'],
+    proxy: {
+      '/api/v1': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
   },
   plugins: [
     tanstackRouter({
@@ -30,6 +38,17 @@ export default defineConfig({
   test: {
     silent: 'passed-only',
     unstubEnvs: true,
+    // Baseline defect: a nested git worktree (`.kilo/worktrees/**`) and the
+    // workspace build outputs were being collected as test files, so foreign
+    // copies of the suite ran and failed here.
+    exclude: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/coverage/**',
+      '**/.kilo/**',
+      '**/apps/**',
+      '**/packages/**',
+    ],
     browser: {
       enabled: true,
       provider: playwright(),
