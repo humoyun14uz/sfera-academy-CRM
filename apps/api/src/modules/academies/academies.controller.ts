@@ -5,7 +5,7 @@ import { RbacGuard } from '../../common/guards/rbac.guard'
 import { RequirePermission } from '../../common/decorators/require-permission.decorator'
 import { CurrentUser, AuthenticatedUser } from '../../common/decorators/current-user.decorator'
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe'
-import { createAcademySchema, CreateAcademyDto } from '@sfera/contracts'
+import { createAcademySchema, CreateAcademyDto } from './dto/create-academy.dto'
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger'
 
 @ApiTags('Academies')

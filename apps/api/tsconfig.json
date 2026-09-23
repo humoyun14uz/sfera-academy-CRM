@@ -21,6 +21,7 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
+    "noEmit": false,
     // Paths are declared without `baseUrl` because TS 6.0 made `baseUrl` a hard
     // error (TS5101).
     "paths": {

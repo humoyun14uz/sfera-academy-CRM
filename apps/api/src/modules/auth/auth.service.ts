@@ -1,14 +1,10 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common'
 import { createDb, users, academyMemberships, academies, roles, rolePermissions, permissions } from '@sfera/db'
 import { eq, and } from 'drizzle-orm'
-import { AuditLogsService } from '../audit-logs/audit-logs.service'
 
 @Injectable()
 export class AuthService {
-  constructor(
-    @Inject('DATABASE') private db: ReturnType<typeof createDb>,
-    private auditLogsService: AuditLogsService
-  ) {}
+  constructor(@Inject('DATABASE') private db: ReturnType<typeof createDb>) {}
 
   async getMe(userId: string, currentAcademyId: string) {
     const userList = await this.db.select().from(users).where(eq(users.id, userId)).limit(1)
@@ -135,14 +131,6 @@ export class AuthService {
           isActive: true,
         })
       }
-
-      await this.auditLogsService.log({
-        userId,
-        action: 'USER_SYNCED_FROM_CLERK',
-        entityType: 'users',
-        entityId: userId,
-        payloadAfter: { email: data.email, clerkId: data.clerkId },
-      })
     }
 
     return { userId, success: true }
