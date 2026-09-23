@@ -9,6 +9,9 @@ import {
   Target,
   UsersRound,
   WalletCards,
+  TrendingUp,
+  Clock,
+  AlertCircle,
 } from 'lucide-react'
 import {
   Bar,
@@ -180,42 +183,42 @@ export function ManagerDashboard() {
       value: activeStudents.length,
       hint: t('growthVsLastMonth'),
       icon: GraduationCap,
-      tone: 'text-blue-600',
+      tone: 'text-emerald-600',
     },
     {
       label: t('monthlyRevenue'),
       value: formatCurrency(collected, language),
       hint: t('recordedTransactions'),
       icon: CircleDollarSign,
-      tone: 'text-emerald-600',
+      tone: 'text-blue-600',
     },
     {
       label: t('outstandingDebt'),
       value: formatCurrency(debt, language),
       hint: `${debtors.length} ${t('debtors')}`,
       icon: WalletCards,
-      tone: 'text-rose-600',
+      tone: 'text-orange-600',
     },
     {
       label: t('academyAttendance'),
       value: `${avgAttendance}%`,
       hint: t('acrossActiveStudents'),
       icon: CheckCircle2,
-      tone: 'text-violet-600',
+      tone: 'text-teal-600',
     },
     {
       label: t('applications'),
       value: crm.applications.length,
       hint: `${crm.applications.filter((a) => a.status === 'NEW').length} ${t('new')}`,
       icon: Target,
-      tone: 'text-amber-600',
+      tone: 'text-purple-600',
     },
     {
       label: t('activeGroups'),
       value: crm.groups.length,
       hint: `${crm.groups.filter((g) => g.studentIds.length / g.capacity >= 0.9).length} ${t('nearCapacity')}`,
       icon: UsersRound,
-      tone: 'text-indigo-600',
+      tone: 'text-pink-600',
     },
   ]
 
@@ -250,7 +253,7 @@ export function ManagerDashboard() {
       <Main>
         <div className='mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between'>
           <div>
-            <p className='text-sm font-medium text-primary'>
+            <p className='text-sm font-medium text-emerald-600 dark:text-emerald-400'>
               SFERA IT Academy · {en ? 'Manager Operations' : 'Manager Boshqaruvi'}
             </p>
             <h1 className='text-3xl font-bold tracking-tight'>
@@ -335,13 +338,16 @@ export function ManagerDashboard() {
         {/* Manager-specific analytics sections */}
         <div className='mt-6 grid gap-6 xl:grid-cols-[1.15fr_0.85fr]'>
           <Card className='overflow-hidden'>
-            <CardHeader className='border-b bg-gradient-to-r from-emerald-500/[0.08] via-card to-primary/[0.05]'>
+            <CardHeader className='border-b bg-gradient-to-r from-emerald-500/[0.12] via-card to-teal-500/[0.08]'>
               <div className='flex items-center justify-between gap-3'>
                 <div>
-                  <CardTitle>{en ? 'Attendance Analytics' : 'Davomat Tahlili'}</CardTitle>
+                  <CardTitle className='flex items-center gap-2'>
+                    <TrendingUp className='size-5 text-emerald-600' />
+                    {en ? 'Attendance Analytics' : 'Davomat Tahlili'}
+                  </CardTitle>
                   <CardDescription>{en ? 'Compare last month with the current month.' : 'O‘tgan oy va joriy oy davomatini solishtiring.'}</CardDescription>
                 </div>
-                <Badge variant='outline'>{avgAttendance}%</Badge>
+                <Badge variant='outline' className='bg-emerald-500/10 text-emerald-700 dark:text-emerald-300'>{avgAttendance}%</Badge>
               </div>
             </CardHeader>
             <CardContent className='p-4'>
@@ -351,7 +357,7 @@ export function ManagerDashboard() {
                     <defs>
                       <linearGradient id='managerAttendance' x1='0' y1='0' x2='0' y2='1'>
                         <stop offset='0%' stopColor='#10b981' stopOpacity={0.95}/>
-                        <stop offset='100%' stopColor='#2563eb' stopOpacity={0.75}/>
+                        <stop offset='100%' stopColor='#14b8a6' stopOpacity={0.75}/>
                       </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray='3 3' vertical={false}/>
@@ -367,7 +373,10 @@ export function ManagerDashboard() {
 
           <Card>
             <CardHeader>
-              <CardTitle>{en ? 'Top Attendance Learners' : 'Eng Yaxshi Davomat Ko‘rsatganlar'}</CardTitle>
+              <CardTitle className='flex items-center gap-2'>
+                <Clock className='size-5 text-emerald-600' />
+                {en ? 'Top Attendance Learners' : 'Eng Yaxshi Davomat Ko‘rsatganlar'}
+              </CardTitle>
               <CardDescription>{en ? 'Students with the strongest attendance rate.' : 'Davomat foizi eng yuqori bo‘lgan o‘quvchilar.'}</CardDescription>
             </CardHeader>
             <CardContent className='space-y-3'>
@@ -391,7 +400,10 @@ export function ManagerDashboard() {
         <div className='mt-6 grid gap-6 xl:grid-cols-[1.25fr_1fr]'>
           <Card>
             <CardHeader>
-              <CardTitle>{t('studentsAtRisk')}</CardTitle>
+              <CardTitle className='flex items-center gap-2'>
+                <AlertCircle className='size-5 text-orange-600' />
+                {t('studentsAtRisk')}
+              </CardTitle>
               <CardDescription>{t('calculatedRisk')}</CardDescription>
             </CardHeader>
             <CardContent>

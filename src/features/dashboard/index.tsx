@@ -92,18 +92,20 @@ export function Dashboard() {
     return (
       <>
         <Header>
-          <TopNav links={[{ title: t('executiveOverview'), href: '/', isActive: true }]} />
+          <TopNav links={[{ title: en ? 'Admin Console' : 'Admin Konsoli', href: '/', isActive: true }]} />
           <Search />
           <ThemeSwitch />
         </Header>
         <Main>
           <Card>
             <CardHeader>
-              <CardTitle>Failed to load data</CardTitle>
-              <CardDescription>Please try again or contact support.</CardDescription>
+              <CardTitle>{en ? 'Loading Dashboard' : 'Dashboard Yuklanmoqda'}</CardTitle>
+              <CardDescription>{en ? 'Please wait while we load your data...' : 'Ma\'lumotlarni yuklash kutilmoqda...'}</CardDescription>
             </CardHeader>
             <CardContent>
-              <Button onClick={crm.refetch}>Retry</Button>
+              <div className='flex items-center justify-center py-8'>
+                <div className='h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent' />
+              </div>
             </CardContent>
           </Card>
         </Main>

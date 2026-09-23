@@ -13,7 +13,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { SidebarTrigger } from '@/components/ui/sidebar'
 import { LanguageSwitcher } from '@/components/language-switcher'
 
 type HeaderProps = React.HTMLAttributes<HTMLElement> & {
@@ -52,10 +51,6 @@ export function Header({ className, fixed, children, ...props }: HeaderProps) {
             'after:absolute after:inset-0 after:-z-10 after:bg-background/20 after:backdrop-blur-lg'
         )}
       >
-        <SidebarTrigger
-          variant='outline'
-          className='size-8 shrink-0 border-border/70 sm:size-7'
-        />
         <div className='flex min-w-0 flex-1 items-center gap-3 sm:gap-4'>
           {children}
         </div>
