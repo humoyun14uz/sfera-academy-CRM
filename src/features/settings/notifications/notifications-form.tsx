@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -87,16 +88,19 @@ export function NotificationsForm() {
   })
 
   const canCreateNotifications = role === 'Super Admin' || role === 'Admin' || role === 'Manager'
+  const [notificationCounter, setNotificationCounter] = useState(0)
 
   const handleCreateNotification = (data: CreateNotificationValues) => {
     const newNotification = {
-      id: `notif-${Date.now()}`,
+      id: `notif-${notificationCounter}`,
       title: data.title,
       category: data.category,
       read: false,
       createdAt: new Date().toISOString(),
       target: '/settings/notifications',
     }
+    
+    setNotificationCounter(notificationCounter + 1)
     
     addNotification(newNotification)
     createForm.reset()
@@ -107,14 +111,14 @@ export function NotificationsForm() {
       alert('Bildirishnoma muvaffaqiyatli yaratildi!')
     }
   }
-  })
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit((data) => showSubmittedData(data))}
-        className='space-y-8'
-      >
+    <>
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit((data) => showSubmittedData(data))}
+          className='space-y-8'
+        >
         <FormField
           control={form.control}
           name='type'
@@ -393,6 +397,6 @@ export function NotificationsForm() {
         </CardContent>
       </Card>
     )}
-  </>
+    </>
   )
 }

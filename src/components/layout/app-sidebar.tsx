@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useAuthStore } from '@/stores/auth-store'
 import { getPrimaryRole } from '@/lib/rbac'
 import { useLanguage, type TranslationKey } from '@/context/language-provider'
@@ -13,6 +14,7 @@ import { AppTitle } from './app-title'
 import { sidebarData } from './data/sidebar-data'
 import { NavGroup } from './nav-group'
 import { SidebarUser } from './sidebar-user'
+import { CompanySelector } from './company-selector'
 
 export function AppSidebar() {
   const { collapsible, variant } = useLayout()
@@ -29,6 +31,15 @@ export function AppSidebar() {
           : role === 'Finance'
             ? ['Finance', 'FinanceSystem']
             : ['Student', 'StudentFinance']
+
+  // Mock company data
+  const companies = [
+    { id: '1', name: 'Sfera IT Academy' },
+    { id: '2', name: 'Conceptzilla' },
+    { id: '3', name: 'Shakuro' }
+  ]
+  
+  const [currentCompany, setCurrentCompany] = useState(companies[0])
 
   const navGroups = sidebarData.navGroups
     .filter((group) => allowedGroups.includes(group.title))
@@ -55,8 +66,15 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible={collapsible} variant={variant}>
       <SidebarHeader className='border-b border-sidebar-border px-4'>
-        <div className='-mx-2'>
+        <div className='-mx-2 space-y-3'>
           <AppTitle />
+          {(role === 'Super Admin' || role === 'Admin' || role === 'Manager') && (
+            <CompanySelector
+              companies={companies}
+              currentCompany={currentCompany}
+              onCompanyChange={setCurrentCompany}
+            />
+          )}
         </div>
       </SidebarHeader>
       <SidebarContent>
