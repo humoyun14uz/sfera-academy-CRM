@@ -15,6 +15,7 @@
   "dependencies": {
     "@clerk/backend": "^1.24.1",
     "@fastify/helmet": "^13.0.1",
+    "@fastify/static": "^8.3.0",
     "@nestjs/common": "^11.0.11",
     "@nestjs/core": "^11.0.11",
     "@nestjs/platform-fastify": "^11.0.11",

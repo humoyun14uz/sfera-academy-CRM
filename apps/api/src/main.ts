@@ -48,13 +48,47 @@ async function bootstrap() {
   // 4. OpenAPI / Swagger Documentation
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Sfera Academy CRM API')
-    .setDescription('Production-ready multi-tenant CRM API for Sfera IT Academy')
+    .setDescription(
+      [
+        'Production-ready multi-tenant CRM API for Sfera IT Academy.',
+        '',
+        'Protected endpoints use Clerk bearer authentication. Click Authorize and enter a valid Clerk access token to try them from Swagger UI.',
+        '',
+        'The API is grouped by Academies, Authentication & Identity, Audit Logs, Attendance, Courses, Enrollments, Finance, Grades, Groups, Leads, and Students.',
+      ].join('\n')
+    )
     .setVersion('1.0.0')
-    .addBearerAuth()
+    .setContact(
+      'Sfera IT Academy',
+      'https://github.com/humoyun14uz/sfera-academy-CRM',
+      'humoyunergashev86@gmail.com'
+    )
+    .addServer(
+      process.env.API_PUBLIC_URL || `http://localhost:${process.env.PORT || 3000}`,
+      'Current API server'
+    )
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        description: 'Clerk access token',
+      }
+    )
     .build()
 
   const document = SwaggerModule.createDocument(app, swaggerConfig)
-  SwaggerModule.setup('api/docs', app, document)
+  SwaggerModule.setup('api/docs', app, document, {
+    jsonDocumentUrl: 'api/docs-json',
+    swaggerOptions: {
+      persistAuthorization: true,
+      displayRequestDuration: true,
+      filter: true,
+      docExpansion: 'none',
+      operationsSorter: 'alpha',
+      tagsSorter: 'alpha',
+    },
+  })
 
   const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000
   const host = process.env.HOST || '0.0.0.0'
