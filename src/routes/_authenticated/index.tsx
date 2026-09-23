@@ -11,6 +11,10 @@ const Dashboard = lazyRouteComponent(
   () => import('@/features/dashboard'),
   'Dashboard'
 )
+const ManagerDashboard = lazyRouteComponent(
+  () => import('@/features/dashboard/manager-dashboard'),
+  'ManagerDashboard'
+)
 const StudentDashboard = lazyRouteComponent(
   () => import('@/features/student/student-dashboard'),
   'StudentDashboard'
@@ -28,5 +32,7 @@ export const Route = createFileRoute('/_authenticated/')({
 
 function RoleDashboard() {
   const role = getPrimaryRole(useAuthStore((state) => state.auth.user?.role))
-  return role === 'Student' ? <StudentDashboard /> : <Dashboard />
+  if (role === 'Student') return <StudentDashboard />
+  if (role === 'Manager') return <ManagerDashboard />
+  return <Dashboard />
 }

@@ -6,10 +6,11 @@ import {
   CircleDollarSign,
   GraduationCap,
   LineChart as LineChartIcon,
-  Plus,
   Target,
   UsersRound,
   WalletCards,
+  Shield,
+  Settings,
 } from 'lucide-react'
 import {
   Area,
@@ -26,8 +27,6 @@ import {
   YAxis,
 } from 'recharts'
 import { useApiStore } from '@/lib/api-store'
-import { useAuthStore } from '@/stores/auth-store'
-import { getPrimaryRole } from '@/lib/rbac'
 import { formatCurrency, useLanguage } from '@/context/language-provider'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -63,8 +62,6 @@ const COLORS = [
 export function Dashboard() {
   const { language, t } = useLanguage()
   const crm = useApiStore()
-  const user = useAuthStore((state) => state.auth.user)
-  const role = getPrimaryRole(user?.role)
   const [range, setRange] = useState('this-month')
   const en = language === 'en'
 
@@ -214,13 +211,6 @@ export function Dashboard() {
     { label: en ? 'Approved' : 'Tasdiqlangan', value: crm.applications.filter((a) => a.status === 'APPROVED').length },
     { label: en ? 'Enrolled' : 'Qabul qilingan', value: crm.applications.filter((a) => a.status === 'ENROLLED').length },
   ]
-  const managerAttendance = [
-    { month: en ? 'Last month' : 'O‘tgan oy', value: 87 },
-    { month: en ? 'Current month' : 'Joriy oy', value: avgAttendance },
-  ]
-  const topAttendanceStudents = [...activeStudents]
-    .sort((a, b) => b.attendance - a.attendance)
-    .slice(0, 4)
     const rangeLabel = {
     today: t('today'),
     'this-month': t('thisMonth'),
@@ -302,13 +292,13 @@ export function Dashboard() {
         <div className='mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between'>
           <div>
             <p className='text-sm font-medium text-primary'>
-              SFERA IT Academy · {role === 'Manager' ? (en ? 'Manager operations' : 'Manager boshqaruvi') : t('executiveIntelligence')}
+              SFERA IT Academy · {en ? 'Admin Console' : 'Admin Konsoli'}
             </p>
             <h1 className='text-3xl font-bold tracking-tight'>
-              {role === 'Manager' ? (en ? 'Manager dashboard' : 'Manager boshqaruv paneli') : t('academyCommandCenter')}
+              {en ? 'Academy Command Center' : 'Akademiya Boshqaruv Markazi'}
             </h1>
             <p className='mt-1 text-sm text-muted-foreground'>
-              {t('academyCommandDescription')}
+              {en ? 'System overview and administrative controls' : 'Tizim ko‘rinishi va maʼmuriy boshqaruv'}
             </p>
           </div>
           <div className='flex flex-wrap gap-2'>
@@ -338,9 +328,9 @@ export function Dashboard() {
               </SelectContent>
             </Select>
             <Button asChild>
-              <a href='/academy/leads'>
-                <Plus className='me-2 size-4' />
-                {t('quickAction')}
+              <a href='/users/manage'>
+                <Shield className='me-2 size-4' />
+                {en ? 'Manage Users' : 'Foydalanuvchilarni Boshqarish'}
               </a>
             </Button>
           </div>
@@ -578,31 +568,6 @@ export function Dashboard() {
             </CardContent>
           </Card>
         </div>
-        {role === 'Manager' && (
-          <div className='mt-6 grid gap-6 lg:grid-cols-[1.15fr_0.85fr]'>
-            <Card className='overflow-hidden'>
-              <CardHeader className='border-b bg-gradient-to-r from-emerald-500/[0.08] via-card to-primary/[0.05]'>
-                <div className='flex items-center justify-between gap-3'>
-                  <div><CardTitle>{en ? 'Attendance analytics' : 'Davomat tahlili'}</CardTitle><CardDescription>{en ? 'Compare last month with the current month.' : 'O‘tgan oy va joriy oy davomatini solishtiring.'}</CardDescription></div>
-                  <Badge variant='outline'>{avgAttendance}%</Badge>
-                </div>
-              </CardHeader>
-              <CardContent className='p-4'>
-                <div className='h-[250px]'><ResponsiveContainer width='100%' height='100%'><BarChart data={managerAttendance} barSize={52}>
-                  <defs><linearGradient id='managerAttendance' x1='0' y1='0' x2='0' y2='1'><stop offset='0%' stopColor='#10b981' stopOpacity={0.95}/><stop offset='100%' stopColor='#2563eb' stopOpacity={0.75}/></linearGradient></defs>
-                  <CartesianGrid strokeDasharray='3 3' vertical={false}/><XAxis dataKey='month'/><YAxis domain={[0,100]} tickFormatter={(v) => `${v}%`}/>
-                  <Tooltip formatter={(value) => [`${value}%`, en ? 'Attendance' : 'Davomat']}/><Bar dataKey='value' fill='url(#managerAttendance)' radius={[10,10,4,4]}/>
-                </BarChart></ResponsiveContainer></div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader><CardTitle>{en ? 'Top attendance learners' : 'Eng yaxshi davomat ko‘rsatganlar'}</CardTitle><CardDescription>{en ? 'Students with the strongest attendance rate.' : 'Davomat foizi eng yuqori bo‘lgan o‘quvchilar.'}</CardDescription></CardHeader>
-              <CardContent className='space-y-3'>
-                {topAttendanceStudents.map((student, index) => <div key={student.id} className='flex items-center gap-3 rounded-2xl border p-3'><span className='flex size-9 items-center justify-center rounded-xl bg-emerald-500/10 text-xs font-bold text-emerald-700 dark:text-emerald-300'>{index + 1}</span><div className='min-w-0 flex-1'><p className='truncate text-sm font-semibold'>{student.name}</p><p className='text-xs text-muted-foreground'>{student.course}</p></div><span className='font-bold text-emerald-600'>{student.attendance}%</span></div>)}
-              </CardContent>
-            </Card>
-          </div>
-        )}
         <div className='mt-6 grid gap-6 xl:grid-cols-[1.25fr_1fr]'>
           <Card>
             <CardHeader>
@@ -719,6 +684,92 @@ export function Dashboard() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Admin-specific system overview */}
+        <div className='mt-6 grid gap-6 lg:grid-cols-3'>
+          <Card>
+            <CardHeader>
+              <CardTitle className='flex items-center gap-2'>
+                <Shield className='size-5 text-primary' />
+                {en ? 'System Health' : 'Tizim Sog‘ligi'}
+              </CardTitle>
+              <CardDescription>{en ? 'Overall system status' : 'Umumiy tizim holati'}</CardDescription>
+            </CardHeader>
+            <CardContent className='space-y-4'>
+              <div className='flex items-center justify-between'>
+                <span className='text-sm'>{en ? 'API Status' : 'API Holati'}</span>
+                <Badge variant='outline' className='text-emerald-600'>{en ? 'Operational' : 'Ishlayapti'}</Badge>
+              </div>
+              <div className='flex items-center justify-between'>
+                <span className='text-sm'>{en ? 'Database' : 'Maʼlumotlar bazasi'}</span>
+                <Badge variant='outline' className='text-emerald-600'>{en ? 'Connected' : 'Ulangan'}</Badge>
+              </div>
+              <div className='flex items-center justify-between'>
+                <span className='text-sm'>{en ? 'Storage' : 'Xotira'}</span>
+                <Badge variant='outline' className='text-amber-600'>{en ? '45% Used' : '45% Foydalanilmoqda'}</Badge>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className='flex items-center gap-2'>
+                <UsersRound className='size-5 text-primary' />
+                {en ? 'User Activity' : 'Foydalanuvchi Faoliyati'}
+              </CardTitle>
+              <CardDescription>{en ? 'Active users by role' : 'Rol bo‘yicha faol foydalanuvchilar'}</CardDescription>
+            </CardHeader>
+            <CardContent className='space-y-3'>
+              <div className='flex items-center justify-between'>
+                <span className='text-sm'>{en ? 'Admins' : 'Adminlar'}</span>
+                <span className='font-semibold'>3</span>
+              </div>
+              <div className='flex items-center justify-between'>
+                <span className='text-sm'>{en ? 'Managers' : 'Managerlar'}</span>
+                <span className='font-semibold'>5</span>
+              </div>
+              <div className='flex items-center justify-between'>
+                <span className='text-sm'>{en ? 'Teachers' : 'O‘qituvchilar'}</span>
+                <span className='font-semibold'>12</span>
+              </div>
+              <div className='flex items-center justify-between'>
+                <span className='text-sm'>{en ? 'Students' : 'O‘quvchilar'}</span>
+                <span className='font-semibold'>{activeStudents.length}</span>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className='flex items-center gap-2'>
+                <Settings className='size-5 text-primary' />
+                {en ? 'Quick Admin Actions' : 'Tezkor Admin Harakatlari'}
+              </CardTitle>
+              <CardDescription>{en ? 'System management' : 'Tizim boshqaruvi'}</CardDescription>
+            </CardHeader>
+            <CardContent className='space-y-2'>
+              <Button asChild variant='outline' className='w-full justify-start'>
+                <a href='/users/manage'>
+                  <Shield className='me-2 size-4' />
+                  {en ? 'Manage Users' : 'Foydalanuvchilarni Boshqarish'}
+                </a>
+              </Button>
+              <Button asChild variant='outline' className='w-full justify-start'>
+                <a href='/settings'>
+                  <Settings className='me-2 size-4' />
+                  {en ? 'System Settings' : 'Tizim Sozlamalari'}
+                </a>
+              </Button>
+              <Button asChild variant='outline' className='w-full justify-start'>
+                <a href='/academy/reports'>
+                  <BarChart3 className='me-2 size-4' />
+                  {en ? 'View Reports' : 'Hisobotlarni Ko‘rish'}
+                </a>
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+
         <div className='mt-6 grid gap-6 lg:grid-cols-[1fr_1fr]'>
           <Card>
             <CardHeader className='border-b bg-muted/[0.16]'><div className='flex items-center justify-between gap-3'><div><CardTitle>{t('recentActivity')}</CardTitle><CardDescription>{t('transparentAuditTrail')}</CardDescription></div><BarChart3 className='size-5 text-primary' /></div></CardHeader>
