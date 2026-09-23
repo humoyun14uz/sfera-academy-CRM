@@ -10,7 +10,6 @@ import {
   SidebarHeader,
   SidebarRail,
 } from '@/components/ui/sidebar'
-import { AppTitle } from './app-title'
 import { sidebarData } from './data/sidebar-data'
 import { NavGroup } from './nav-group'
 import { SidebarUser } from './sidebar-user'
@@ -23,14 +22,16 @@ export function AppSidebar() {
   const role = getPrimaryRole(user?.role)
   const allowedGroups =
     role === 'Super Admin'
-      ? ['Academy', 'Management', 'System']
-      : role === 'Manager'
-        ? ['Academy', 'Management']
-        : role === 'Teacher'
-          ? ['Teacher', 'TeacherSystem']
-          : role === 'Finance'
-            ? ['Finance', 'FinanceSystem']
-            : ['Student', 'StudentFinance']
+      ? ['Academy', 'Management', 'System', 'Teacher', 'Finance', 'Student']
+      : role === 'Admin'
+        ? ['Academy', 'Management', 'System']
+        : role === 'Manager'
+          ? ['Academy', 'Management']
+          : role === 'Teacher'
+            ? ['Teacher', 'TeacherSystem']
+            : role === 'Finance'
+              ? ['Finance', 'FinanceSystem']
+              : ['Student', 'StudentFinance']
 
   // Mock company data
   const companies = [
@@ -66,8 +67,7 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible={collapsible} variant={variant}>
       <SidebarHeader className='border-b border-sidebar-border px-4'>
-        <div className='-mx-2 space-y-3'>
-          <AppTitle />
+        <div className='-mx-2'>
           {(role === 'Super Admin' || role === 'Admin' || role === 'Manager') && (
             <CompanySelector
               companies={companies}
