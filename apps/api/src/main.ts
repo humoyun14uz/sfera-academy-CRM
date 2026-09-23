@@ -73,8 +73,7 @@ async function bootstrap() {
         scheme: 'bearer',
         bearerFormat: 'JWT',
         description: 'Clerk access token',
-      },
-      'clerk-bearer'
+      }
     )
     .build()
 
