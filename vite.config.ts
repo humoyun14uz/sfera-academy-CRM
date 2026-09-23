@@ -12,12 +12,20 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 5173,
     strictPort: true,
-    allowedHosts: true,
-    // P0-5 FIX: explicit allowlist instead of the previous blanket `allowedHosts: true`
+    // P0-5 FIX: explicit allowlist instead of a blanket allowed-host policy.
     allowedHosts: ['localhost', '127.0.0.1', '.manus.computer'],
     proxy: {
-      '/api/v1': {
+      // Keep the only externally exposed port on 5173. The API stays private
+      // on localhost:3000 and Vite forwards REST + Swagger requests to it.
+      '/api': {
         target: 'http://localhost:3000',
+        changeOrigin: true,
+        secure: false,
+      },
+      // Same-port realtime notifications for the browser client.
+      '/notifications': {
+        target: 'ws://localhost:3000',
+        ws: true,
         changeOrigin: true,
         secure: false,
       },
