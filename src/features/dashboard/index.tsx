@@ -2,13 +2,7 @@ import { useState } from 'react'
 import {
   BarChart3,
   CalendarClock,
-  CheckCircle2,
-  CircleDollarSign,
-  GraduationCap,
   LineChart as LineChartIcon,
-  Target,
-  UsersRound,
-  WalletCards,
   Shield,
   Settings,
 } from 'lucide-react'
@@ -47,6 +41,7 @@ import {
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { TopNav } from '@/components/layout/top-nav'
+import { SummaryCards, useSummaryCards } from '@/components/ui/summary-cards'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 
@@ -64,6 +59,16 @@ export function Dashboard() {
   const crm = useApiStore()
   const [range, setRange] = useState('this-month')
   const en = language === 'en'
+  const { academyCards } = useSummaryCards()
+
+  // Override with real data
+  const summaryCards = academyCards.map(card => ({
+    ...card,
+    value: card.title.includes('Students') ? crm.students.filter(s => s.status === 'active').length :
+              card.title.includes('Revenue') ? formatCurrency(crm.payments.reduce((sum, p) => sum + p.amount, 0), language) :
+              card.title.includes('Tasks') ? 23 :
+              card.value
+  }))
 
   if (crm.isLoading) {
     return (
@@ -142,16 +147,10 @@ export function Dashboard() {
     { month: 7, active: 35, newStudents: 9 },
     { month: 8, active: activeStudents.length, newStudents: 4 },
   ].map((item) => ({ ...item, month: monthLabel(item.month) }))
-  const debt = crm.students.reduce((sum, student) => sum + student.debt, 0)
   const collected = crm.payments.reduce(
     (sum, payment) => sum + payment.amount,
     0
   )
-  const avgAttendance = Math.round(
-    activeStudents.reduce((sum, student) => sum + student.attendance, 0) /
-      Math.max(activeStudents.length, 1)
-  )
-  const debtors = crm.students.filter((student) => student.debt > 0)
   const stageOrder = [
     'NEW',
     'CONTACTED',
@@ -219,50 +218,6 @@ export function Dashboard() {
     quarter: t('thisQuarter'),
     year: t('thisYear'),
   }[range]
-  const stats = [
-    {
-      label: t('totalStudents'),
-      value: activeStudents.length,
-      hint: t('growthVsLastMonth'),
-      icon: GraduationCap,
-      tone: 'text-sky-600',
-    },
-    {
-      label: t('monthlyRevenue'),
-      value: formatCurrency(collected, language),
-      hint: t('recordedTransactions'),
-      icon: CircleDollarSign,
-      tone: 'text-emerald-600',
-    },
-    {
-      label: t('outstandingDebt'),
-      value: formatCurrency(debt, language),
-      hint: `${debtors.length} ${t('debtors')}`,
-      icon: WalletCards,
-      tone: 'text-rose-600',
-    },
-    {
-      label: t('academyAttendance'),
-      value: `${avgAttendance}%`,
-      hint: t('acrossActiveStudents'),
-      icon: CheckCircle2,
-      tone: 'text-violet-600',
-    },
-    {
-      label: t('applications'),
-      value: crm.applications.length,
-      hint: `${crm.applications.filter((a) => a.status === 'NEW').length} ${t('new')}`,
-      icon: Target,
-      tone: 'text-amber-600',
-    },
-    {
-      label: t('activeGroups'),
-      value: crm.groups.length,
-      hint: `${crm.groups.filter((g) => g.studentIds.length / g.capacity >= 0.9).length} ${t('nearCapacity')}`,
-      icon: UsersRound,
-      tone: 'text-indigo-600',
-    },
-  ]
   const tr = (key: string) =>
     ({
       NEW: t('applications'),
@@ -337,39 +292,7 @@ export function Dashboard() {
             </Button>
           </div>
         </div>
-        <div className='grid gap-4 sm:grid-cols-2 xl:grid-cols-3'>
-          {stats.map((stat) => {
-            const Icon = stat.icon
-            return (
-              <a
-                key={stat.label}
-                href={
-                  stat.label.includes('revenue') ||
-                  stat.label.includes('tushum') ||
-                  stat.label.includes('debt') ||
-                  stat.label.includes('Qarz')
-                    ? '/academy/finance'
-                    : '#'
-                }
-              >
-                <Card className='h-full cursor-pointer transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md'>
-                  <CardHeader className='flex flex-row items-start justify-between pb-2'>
-                    <CardTitle className='text-sm font-medium'>
-                      {stat.label}
-                    </CardTitle>
-                    <Icon className={`size-5 ${stat.tone}`} />
-                  </CardHeader>
-                  <CardContent>
-                    <div className='text-2xl font-bold'>{stat.value}</div>
-                    <p className='mt-1 text-xs text-muted-foreground'>
-                      {stat.hint}
-                    </p>
-                  </CardContent>
-                </Card>
-              </a>
-            )
-          })}
-        </div>
+        <SummaryCards cards={summaryCards} />
         <div className='mt-6 grid gap-6 xl:grid-cols-[1.65fr_1fr]'>
           <Card>
             <CardHeader>

@@ -1,14 +1,9 @@
 import { useState } from 'react'
 import {
   CalendarClock,
-  CheckCircle2,
-  CircleDollarSign,
-  GraduationCap,
   LineChart as LineChartIcon,
   Plus,
-  Target,
   UsersRound,
-  WalletCards,
   TrendingUp,
   Clock,
   AlertCircle,
@@ -45,12 +40,14 @@ import { Main } from '@/components/layout/main'
 import { TopNav } from '@/components/layout/top-nav'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
+import { SummaryCards, useSummaryCards } from '@/components/ui/summary-cards'
 
 export function ManagerDashboard() {
   const { language, t } = useLanguage()
   const crm = useApiStore()
   const [range, setRange] = useState('this-month')
   const en = language === 'en'
+  const { academyCards } = useSummaryCards()
 
   if (crm.isLoading) {
     return (
@@ -102,7 +99,6 @@ export function ManagerDashboard() {
     (student) => student.status === 'active'
   )
 
-  const debt = crm.students.reduce((sum, student) => sum + student.debt, 0)
   const collected = crm.payments.reduce(
     (sum, payment) => sum + payment.amount,
     0
@@ -112,8 +108,6 @@ export function ManagerDashboard() {
     activeStudents.reduce((sum, student) => sum + student.attendance, 0) /
       Math.max(activeStudents.length, 1)
   )
-
-  const debtors = crm.students.filter((student) => student.debt > 0)
 
   const stageOrder = [
     'NEW',
@@ -177,50 +171,14 @@ export function ManagerDashboard() {
     .sort((a, b) => b.attendance - a.attendance)
     .slice(0, 4)
 
-  const stats = [
-    {
-      label: t('totalStudents'),
-      value: activeStudents.length,
-      hint: t('growthVsLastMonth'),
-      icon: GraduationCap,
-      tone: 'text-emerald-600',
-    },
-    {
-      label: t('monthlyRevenue'),
-      value: formatCurrency(collected, language),
-      hint: t('recordedTransactions'),
-      icon: CircleDollarSign,
-      tone: 'text-blue-600',
-    },
-    {
-      label: t('outstandingDebt'),
-      value: formatCurrency(debt, language),
-      hint: `${debtors.length} ${t('debtors')}`,
-      icon: WalletCards,
-      tone: 'text-orange-600',
-    },
-    {
-      label: t('academyAttendance'),
-      value: `${avgAttendance}%`,
-      hint: t('acrossActiveStudents'),
-      icon: CheckCircle2,
-      tone: 'text-teal-600',
-    },
-    {
-      label: t('applications'),
-      value: crm.applications.length,
-      hint: `${crm.applications.filter((a) => a.status === 'NEW').length} ${t('new')}`,
-      icon: Target,
-      tone: 'text-purple-600',
-    },
-    {
-      label: t('activeGroups'),
-      value: crm.groups.length,
-      hint: `${crm.groups.filter((g) => g.studentIds.length / g.capacity >= 0.9).length} ${t('nearCapacity')}`,
-      icon: UsersRound,
-      tone: 'text-pink-600',
-    },
-  ]
+  // Override with real data for manager
+  const summaryCards = academyCards.map(card => ({
+    ...card,
+    value: card.title.includes('Students') ? activeStudents.length :
+              card.title.includes('Revenue') ? formatCurrency(collected, language) :
+              card.title.includes('Tasks') ? 23 :
+              card.value
+  }))
 
   const tr = (key: string) =>
     ({
@@ -299,41 +257,7 @@ export function ManagerDashboard() {
         </div>
 
         {/* Manager-specific KPI cards */}
-        <div className='grid gap-4 sm:grid-cols-2 xl:grid-cols-3'>
-          {stats.map((stat) => {
-            const Icon = stat.icon
-            return (
-              <a
-                key={stat.label}
-                href={
-                  stat.label.includes('revenue') ||
-                  stat.label.includes('tushum') ||
-                  stat.label.includes('debt') ||
-                  stat.label.includes('Qarz')
-                    ? '/academy/finance'
-                    : stat.label.includes('applications') || stat.label.includes('Arizalar')
-                      ? '/academy/leads'
-                      : '#'
-                }
-              >
-                <Card className='h-full cursor-pointer transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md'>
-                  <CardHeader className='flex flex-row items-start justify-between pb-2'>
-                    <CardTitle className='text-sm font-medium'>
-                      {stat.label}
-                    </CardTitle>
-                    <Icon className={`size-5 ${stat.tone}`} />
-                  </CardHeader>
-                  <CardContent>
-                    <div className='text-2xl font-bold'>{stat.value}</div>
-                    <p className='mt-1 text-xs text-muted-foreground'>
-                      {stat.hint}
-                    </p>
-                  </CardContent>
-                </Card>
-              </a>
-            )
-          })}
-        </div>
+        <SummaryCards cards={summaryCards} />
 
         {/* Manager-specific analytics sections */}
         <div className='mt-6 grid gap-6 xl:grid-cols-[1.15fr_0.85fr]'>

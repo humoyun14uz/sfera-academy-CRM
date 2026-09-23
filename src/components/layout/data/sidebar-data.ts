@@ -35,6 +35,7 @@ export const sidebarData: SidebarData = {
       title: 'Academy',
       items: [
         { title: 'Dashboard', url: '/', icon: LayoutDashboard, permission: 'dashboard.read' },
+        { title: 'Analytics', url: '/analytics', icon: BarChart3, permission: 'dashboard.read' },
         { title: 'Arizalar', url: '/academy/leads', icon: ClipboardList, permission: 'leads.read' },
         { title: 'O‘quvchilar', url: '/users', icon: GraduationCap, permission: 'students.read' },
         { title: 'Kurslar', url: '/apps', icon: BookOpen, permission: 'courses.read' },
@@ -50,6 +51,7 @@ export const sidebarData: SidebarData = {
       title: 'Management',
       items: [
         { title: 'Vazifalar', url: '/tasks', icon: ListTodo, permission: 'tasks.read' },
+        { title: 'Kompaniyalar', url: '/companies', icon: UsersRound, permission: 'users.assign_role' },
         { title: 'Rollar va huquqlar', url: '/users/manage', icon: ShieldCheck, permission: 'users.assign_role' },
       ],
     },
