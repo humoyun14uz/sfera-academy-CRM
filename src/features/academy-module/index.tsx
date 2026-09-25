@@ -2,7 +2,6 @@ import { useState } from 'react'
 import {
   ArrowUpRight,
   BarChart3,
-  LineChartIcon,
   Check,
   CheckCheck,
   CheckCircle2,
@@ -24,8 +23,6 @@ import {
 import {
   Area,
   AreaChart,
-  Bar,
-  BarChart,
   CartesianGrid,
   ResponsiveContainer,
   Tooltip as RechartsTooltip,
@@ -34,12 +31,10 @@ import {
 } from 'recharts'
 import { toast } from 'sonner'
 import { useCrmStore } from '@/lib/crm-store'
-import { useAuthStore } from '@/stores/auth-store'
-import { getPrimaryRole } from '@/lib/rbac'
 import { useLanguage } from '@/context/language-provider'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Dialog,
   DialogContent,
@@ -250,8 +245,6 @@ const groups = [
 export function AcademyModule({ moduleId }: { moduleId: string }) {
   const { language, t } = useLanguage()
   const crm = useCrmStore()
-  const user = useAuthStore((state) => state.auth.user)
-  const role = getPrimaryRole(user?.role)
   const [scheduleMode, setScheduleMode] = useState<'day' | 'week' | 'month'>(
     'week'
   )
@@ -287,11 +280,6 @@ export function AcademyModule({ moduleId }: { moduleId: string }) {
   const description = english
     ? moduleInfo.descriptionEn
     : moduleInfo.descriptionUz
-  const roleDescription = role === 'Super Admin'
-    ? (english ? 'Strategic academy-wide view for Super Admin.' : 'Super Admin uchun akademiya bo‘yicha strategik ko‘rinish.')
-    : role === 'Manager'
-      ? (english ? 'Operational academy view for Manager.' : 'Manager uchun operatsion akademiya ko‘rinishi.')
-      : description
   const staticStats: Record<string, [string, string, string]> = {
     finance: [
       english ? 'Today’s payments' : 'Bugungi to‘lovlar',
@@ -414,7 +402,7 @@ export function AcademyModule({ moduleId }: { moduleId: string }) {
             SFERA IT Academy CRM
           </p>
           <h1 className='text-2xl font-bold tracking-tight'>{title}</h1>
-          <p className='text-muted-foreground'>{roleDescription}</p>
+          <p className='text-muted-foreground'>{description}</p>
         </div>
         <div className='grid gap-4 md:grid-cols-3'>
           <Card>
@@ -442,27 +430,11 @@ export function AcademyModule({ moduleId }: { moduleId: string }) {
             </CardContent>
           </Card>
         </div>
-        {moduleId === 'leads' && (
-          <div className='space-y-5'>
-            <div className='grid gap-4 sm:grid-cols-3'>
-              <Card className='overflow-hidden bg-gradient-to-br from-amber-500/20 via-amber-500/10 to-orange-500/15'><CardContent className='pt-5'><p className='text-xs text-muted-foreground'>{english ? 'Total applications' : 'Jami arizalar'}</p><p className='mt-1 text-2xl font-bold'>{crm.applications.length}</p><p className='mt-1 text-xs text-amber-600'>{crm.applications.filter((a) => a.status === 'NEW').length} {english ? 'new' : 'yangi'}</p></CardContent></Card>
-              <Card><CardContent className='pt-5'><p className='text-xs text-muted-foreground'>{english ? 'Conversion pipeline' : 'Qabul oqimi'}</p><p className='mt-1 text-2xl font-bold'>{crm.applications.filter((a) => ['APPROVED','ENROLLED'].includes(a.status)).length}</p><p className='mt-1 text-xs text-emerald-600'>{english ? 'Approved / enrolled' : 'Tasdiqlangan / qabul qilingan'}</p></CardContent></Card>
-              <Card><CardContent className='pt-5'><p className='text-xs text-muted-foreground'>{english ? 'Follow-up queue' : 'Qayta aloqa navbati'}</p><p className='mt-1 text-2xl font-bold'>{crm.applications.filter((a) => a.status === 'CONTACTED').length}</p><p className='mt-1 text-xs text-primary'>{english ? 'Need manager action' : 'Manager aloqasini kutmoqda'}</p></CardContent></Card>
-            </div>
-            <Card className='overflow-hidden'><CardHeader className='border-b bg-gradient-to-r from-amber-500/15 via-primary/[0.06] to-orange-500/12 py-3'><div className='flex items-center justify-between gap-3'><div><CardTitle className='text-base leading-5'>{english ? 'Application funnel analytics' : 'Arizalar oqimi tahlili'}</CardTitle><CardDescription className='mt-0.5'>{english ? 'See where applications concentrate before opening the detailed list.' : 'Batafsil ro‘yxatga kirishdan oldin arizalar qaysi bosqichda jamlanganini ko‘ring.'}</CardDescription></div><LineChartIcon className='size-5 shrink-0 text-amber-500' /></div></CardHeader><CardContent className='p-4'><div className='h-[250px]'><ResponsiveContainer width='100%' height='100%'><BarChart data={[
-              { stage: english ? 'New' : 'Yangi', value: crm.applications.filter((a) => a.status === 'NEW').length },
-              { stage: english ? 'Contacted' : 'Aloqa', value: crm.applications.filter((a) => a.status === 'CONTACTED').length },
-              { stage: english ? 'Trial' : 'Sinov', value: crm.applications.filter((a) => a.status === 'TRIAL LESSON').length },
-              { stage: english ? 'Approved' : 'Tasdiqlangan', value: crm.applications.filter((a) => a.status === 'APPROVED').length },
-              { stage: english ? 'Enrolled' : 'Qabul', value: crm.applications.filter((a) => a.status === 'ENROLLED').length },
-            ]} barCategoryGap='26%'><CartesianGrid strokeDasharray='3 3' vertical={false}/><XAxis dataKey='stage' tick={{ fontSize: 10 }}/><YAxis allowDecimals={false}/><RechartsTooltip/><Bar dataKey='value' fill='#f59e0b' radius={[9,9,3,3]}/></BarChart></ResponsiveContainer></div></CardContent></Card>
-            <LeadsPanel english={english} />
-          </div>
-        )}
+        {moduleId === 'leads' && <LeadsPanel english={english} />}
         {moduleId === 'groups' && (
           <Card>
-            <CardHeader className='border-b bg-gradient-to-r from-primary/[0.08] via-transparent to-sky-500/[0.08] py-3'>
-              <CardTitle className='text-base leading-5'>
+            <CardHeader className='border-b bg-gradient-to-r from-primary/[0.08] via-transparent to-sky-500/[0.08]'>
+              <CardTitle>
                 {english ? 'Groups & learners' : 'Guruhlar va o‘quvchilar'}
               </CardTitle>
               <p className='mt-1 text-xs text-muted-foreground'>
@@ -565,12 +537,6 @@ export function AcademyModule({ moduleId }: { moduleId: string }) {
           </Card>
         )}
         {moduleId === 'teachers' && (
-          <div className='space-y-5'>
-          <div className='grid gap-4 sm:grid-cols-3'>
-            <Card className='bg-gradient-to-br from-emerald-500/20 via-emerald-500/10 to-teal-500/15'><CardContent className='pt-5'><p className='text-xs text-muted-foreground'>{english ? 'Active teachers' : 'Faol o‘qituvchilar'}</p><p className='mt-1 text-2xl font-bold'>{teacherRows.length}</p><p className='mt-1 text-xs text-emerald-600'>{english ? 'Teaching this week' : 'Shu hafta darsda'}</p></CardContent></Card>
-            <Card className='bg-gradient-to-br from-violet-500/20 via-violet-500/10 to-fuchsia-500/15'><CardContent className='pt-5'><p className='text-xs text-muted-foreground'>{english ? 'Learners covered' : 'Qamrab olingan o‘quvchi'}</p><p className='mt-1 text-2xl font-bold'>{teacherRows.reduce((sum, teacher) => sum + teacher.students, 0)}</p><p className='mt-1 text-xs text-violet-600'>{english ? 'Across assigned groups' : 'Biriktirilgan guruhlar bo‘yicha'}</p></CardContent></Card>
-            <Card className='bg-gradient-to-br from-amber-500/20 via-amber-500/10 to-orange-500/15'><CardContent className='pt-5'><p className='text-xs text-muted-foreground'>{english ? 'Schedule coverage' : 'Jadval qamrovi'}</p><p className='mt-1 text-2xl font-bold'>94%</p><p className='mt-1 text-xs text-amber-600'>{english ? 'Weekly teaching plan' : 'Haftalik dars rejasi'}</p></CardContent></Card>
-          </div>
           <Card>
             <CardHeader className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
               <div>
@@ -616,14 +582,14 @@ export function AcademyModule({ moduleId }: { moduleId: string }) {
                     </tr>
                   </thead>
                   <tbody className='divide-y'>
-                    {teacherRows.map((teacher, index) => (
+                    {teacherRows.map((teacher) => (
                       <tr
                         key={teacher.name}
                         className='transition-colors hover:bg-muted/30'
                       >
                         <td className='px-4 py-3.5'>
                           <div className='flex items-center gap-3'>
-                            <div className={`flex size-9 shrink-0 items-center justify-center rounded-xl text-xs font-bold ${index % 3 === 0 ? 'bg-emerald-500/12 text-emerald-700 dark:text-emerald-300' : index % 3 === 1 ? 'bg-violet-500/12 text-violet-700 dark:text-violet-300' : 'bg-amber-500/12 text-amber-700 dark:text-amber-300'}`}>
+                            <div className='flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary'>
                               {teacher.name
                                 .split(' ')
                                 .map((n) => n[0])
@@ -657,7 +623,6 @@ export function AcademyModule({ moduleId }: { moduleId: string }) {
               </div>
             </CardContent>
           </Card>
-          </div>
         )}
         {moduleId === 'schedule' && (
           <Card>
@@ -700,15 +665,7 @@ export function AcademyModule({ moduleId }: { moduleId: string }) {
               </div>
             </CardHeader>
             <CardContent>
-              <div className='mb-5 grid gap-3 sm:grid-cols-3'>
-                <div className='rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/15 via-primary/8 to-sky-500/10 p-4'><p className='text-xs text-muted-foreground'>{english ? 'Scheduled sessions' : 'Rejalashtirilgan darslar'}</p><p className='mt-1 text-2xl font-bold'>{visibleScheduleRows.length}</p><p className='mt-1 text-xs text-primary'>{english ? 'Visible in this view' : 'Ushbu ko‘rinishda'}</p></div>
-                <div className='rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/15 via-emerald-500/8 to-teal-500/10 p-4'><p className='text-xs text-muted-foreground'>{english ? 'Room coverage' : 'Xona qamrovi'}</p><p className='mt-1 text-2xl font-bold'>96%</p><p className='mt-1 text-xs text-emerald-600'>{english ? 'Rooms assigned' : 'Xonalar biriktirilgan'}</p></div>
-                <div className='rounded-2xl border border-violet-500/20 bg-gradient-to-br from-violet-500/15 via-violet-500/8 to-fuchsia-500/10 p-4'><p className='text-xs text-muted-foreground'>{english ? 'Teacher load' : 'O‘qituvchi yuklamasi'}</p><p className='mt-1 text-2xl font-bold'>84%</p><p className='mt-1 text-xs text-violet-600'>{english ? 'Balanced this week' : 'Shu hafta muvozanatlangan'}</p></div>
-              </div>
-              <div className='mb-5 grid gap-3 md:grid-cols-2 xl:grid-cols-3'>
-                {visibleScheduleRows.slice(0, 6).map((row, index) => <div key={`${row[0]}-${row[4]}`} className='rounded-2xl border border-primary/15 bg-gradient-to-br from-card via-primary/[0.04] to-violet-500/[0.08] p-4 transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md'><div className='flex items-center justify-between'><Badge variant={index === 0 ? 'default' : 'secondary'}>{index === 0 ? (english ? 'Next' : 'Keyingi') : (english ? 'Planned' : 'Reja')}</Badge><span className='text-xs font-semibold text-muted-foreground'>{row[4]}</span></div><p className='mt-3 font-semibold'>{row[0]}</p><p className='mt-1 text-xs text-muted-foreground'>{row[1]} · {row[2]}</p><div className='mt-3 flex items-center justify-between rounded-xl bg-muted/30 px-3 py-2 text-xs'><span>{row[5]}–{row[6]}</span><span>{english ? 'Room' : 'Xona'} {row[3]}</span></div></div>)}
-              </div>
-              <div className='overflow-x-auto rounded-2xl border shadow-sm'>
+              <div className='overflow-x-auto rounded-lg border'>
                 <table className='w-full min-w-[750px] border-collapse text-left text-sm'>
                   <thead>
                     <tr className='border-b bg-muted/40 text-xs font-medium text-muted-foreground'>
@@ -797,7 +754,7 @@ export function AcademyModule({ moduleId }: { moduleId: string }) {
             return (
               <div className='space-y-5'>
                 {/* 1. Guruh tanlash qismi */}
-                <Card className='border-border/70 shadow-sm'>
+                <Card className='border-border/70 shadow-xs'>
                   <CardHeader className='pb-3'>
                     <div className='flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
                       <div>
@@ -914,12 +871,12 @@ export function AcademyModule({ moduleId }: { moduleId: string }) {
                 </Card>
 
                 {/* 2. Bugungi Davomat Asosiy Card */}
-                <Card className='border-border/70 shadow-sm'>
-                  <CardHeader className='flex flex-col gap-2 border-b bg-gradient-to-r from-emerald-500/[0.06] via-transparent to-amber-500/[0.06] py-3 sm:flex-row sm:items-center sm:justify-between'>
+                <Card className='border-border/70 shadow-xs'>
+                  <CardHeader className='flex flex-col gap-3 border-b bg-gradient-to-r from-emerald-500/[0.06] via-transparent to-amber-500/[0.06] py-4 sm:flex-row sm:items-center sm:justify-between'>
                     <div>
-                      <CardTitle className='flex items-center gap-2.5 text-base leading-5'>
-                        <span className='flex size-8 shrink-0 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-600 shadow-xs dark:text-emerald-400'>
-                          <CheckCircle2 className='size-4' />
+                      <CardTitle className='flex items-center gap-2.5 text-lg'>
+                        <span className='flex size-9 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-600 shadow-xs dark:text-emerald-400'>
+                          <CheckCircle2 className='size-5' />
                         </span>
                         <span>
                           {selectedGroup
@@ -1127,13 +1084,6 @@ export function AcademyModule({ moduleId }: { moduleId: string }) {
                         </tbody>
                       </table>
                     </div>
-                    <div className='mt-5 grid gap-4 lg:grid-cols-[1.25fr_0.75fr]'>
-                      <Card className='overflow-hidden'>
-                        <CardHeader className='border-b bg-gradient-to-r from-emerald-500/[0.07] via-card to-primary/[0.04]'><CardTitle className='text-base'>{english ? 'Attendance trend' : 'Davomat dinamikasi'}</CardTitle><CardDescription>{english ? 'Last month vs current month by weekly checkpoints.' : 'O‘tgan oy va joriy oy haftalik ko‘rsatkichlari.'}</CardDescription></CardHeader>
-                        <CardContent className='p-4'><div className='h-[220px]'><ResponsiveContainer width='100%' height='100%'><AreaChart data={[{week:'1',last:86,current:90},{week:'2',last:88,current:92},{week:'3',last:87,current:91},{week:'4',last:89,current:94}]}><defs><linearGradient id='attendanceTrend' x1='0' y1='0' x2='0' y2='1'><stop offset='5%' stopColor='#10b981' stopOpacity={0.28}/><stop offset='95%' stopColor='#10b981' stopOpacity={0}/></linearGradient></defs><CartesianGrid strokeDasharray='3 3' vertical={false}/><XAxis dataKey='week'/><YAxis domain={[70,100]} tickFormatter={(v) => `${v}%`}/><RechartsTooltip formatter={(value,name) => [`${value}%`, name === 'current' ? (english ? 'Current month' : 'Joriy oy') : (english ? 'Last month' : 'O‘tgan oy')]}/><Area type='monotone' dataKey='last' stroke='#94a3b8' fill='none' strokeDasharray='6 4' strokeWidth={2}/><Area type='monotone' dataKey='current' stroke='#10b981' fill='url(#attendanceTrend)' strokeWidth={3}/></AreaChart></ResponsiveContainer></div></CardContent>
-                      </Card>
-                      <Card><CardHeader><CardTitle className='text-base'>{english ? 'Top attendance learners' : 'Top davomatli o‘quvchilar'}</CardTitle><CardDescription>{english ? 'Highest current attendance rates.' : 'Joriy davomat ko‘rsatkichi eng yuqori o‘quvchilar.'}</CardDescription></CardHeader><CardContent className='space-y-3'>{[...displayedStudents].sort((a,b) => b.attendance - a.attendance).slice(0,4).map((student,index) => <div key={student.id} className='flex items-center gap-3 rounded-xl border p-3'><span className='flex size-8 items-center justify-center rounded-lg bg-emerald-500/10 text-xs font-bold text-emerald-700 dark:text-emerald-300'>{index + 1}</span><div className='min-w-0 flex-1'><p className='truncate text-sm font-semibold'>{student.name}</p><p className='text-[11px] text-muted-foreground'>{student.course}</p></div><span className='font-bold text-emerald-600'>{student.attendance}%</span></div>)}</CardContent></Card>
-                    </div>
                   </CardContent>
                 </Card>
               </div>
@@ -1143,7 +1093,7 @@ export function AcademyModule({ moduleId }: { moduleId: string }) {
           <div className='space-y-5'>
             {/* Top Financial KPI Cards */}
             <div className='grid gap-4 sm:grid-cols-3'>
-              <Card className='border-border/70 shadow-sm'>
+              <Card className='border-border/70 shadow-xs'>
                 <CardContent className='pt-5'>
                   <div className='flex items-center justify-between'>
                     <div>
@@ -1171,7 +1121,7 @@ export function AcademyModule({ moduleId }: { moduleId: string }) {
                 </CardContent>
               </Card>
 
-              <Card className='border-border/70 shadow-sm'>
+              <Card className='border-border/70 shadow-xs'>
                 <CardContent className='pt-5'>
                   <div className='flex items-center justify-between'>
                     <div>
@@ -1197,7 +1147,7 @@ export function AcademyModule({ moduleId }: { moduleId: string }) {
                 </CardContent>
               </Card>
 
-              <Card className='border-border/70 shadow-sm'>
+              <Card className='border-border/70 shadow-xs'>
                 <CardContent className='pt-5'>
                   <div className='flex items-center justify-between'>
                     <div>
@@ -1225,7 +1175,7 @@ export function AcademyModule({ moduleId }: { moduleId: string }) {
             </div>
 
             {/* Transactions Card */}
-            <Card className='border-border/70 shadow-sm'>
+            <Card className='border-border/70 shadow-xs'>
               <CardHeader className='flex flex-col gap-3 border-b bg-gradient-to-r from-emerald-500/[0.06] via-transparent to-violet-500/[0.06] py-4 sm:flex-row sm:items-center sm:justify-between'>
                 <div>
                   <CardTitle className='text-base font-semibold'>
@@ -1933,7 +1883,7 @@ export function academyModulePermission(moduleId: string) {
     | 'teachers.read'
     | 'groups.manage_schedule'
     | 'students.read'
-    | 'finance.payments.read'
+    | 'payments.read'
     | 'reports.read'
   > = {
     leads: 'leads.read',
@@ -1941,7 +1891,7 @@ export function academyModulePermission(moduleId: string) {
     teachers: 'teachers.read',
     schedule: 'groups.manage_schedule',
     attendance: 'students.read',
-    finance: 'finance.payments.read',
+    finance: 'payments.read',
     reports: 'reports.read',
   }
   return permissions[moduleId] ?? 'dashboard.read'

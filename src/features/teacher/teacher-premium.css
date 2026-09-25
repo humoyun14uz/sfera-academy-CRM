@@ -1,0 +1,468 @@
+/* SFERA Teacher workspace — clean CRM theme built on the reference green gradient.
+   linear-gradient(90deg, rgba(41,169,86,1) 0%, rgba(103,189,128,1) 50%, rgba(255,255,255,1) 100%) */
+
+.teacher-premium {
+  --teacher-green: #29a956;
+  --teacher-green-bright: #67bd80;
+  --teacher-accent-gradient: linear-gradient(
+    90deg,
+    rgba(41, 169, 86, 1) 0%,
+    rgba(103, 189, 128, 1) 50%,
+    rgba(255, 255, 255, 1) 100%
+  );
+  --teacher-accent-soft: linear-gradient(
+    90deg,
+    rgba(41, 169, 86, 0.12) 0%,
+    rgba(103, 189, 128, 0.06) 50%,
+    rgba(255, 255, 255, 0.9) 100%
+  );
+
+  min-height: calc(100vh - 4rem);
+  overflow: visible;
+  background: #f4f9f5;
+  color: #1f2937;
+}
+
+.teacher-premium > * {
+  position: relative;
+}
+
+/* ---------- Shared page header ---------- */
+.teacher-premium .teacher-heading {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 1.25rem;
+  padding: 1.25rem 1.4rem;
+  border: 1px solid rgba(41, 169, 86, 0.28);
+  border-radius: 0.9rem;
+  background: var(--teacher-accent-soft);
+  box-shadow: 0 4px 16px rgb(31 41 55 / 0.035);
+}
+
+.teacher-premium .teacher-heading::after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 42%;
+  height: 100%;
+  background: var(--teacher-accent-gradient);
+  opacity: 0.22;
+  content: '';
+  pointer-events: none;
+}
+
+.teacher-premium .teacher-heading > * {
+  position: relative;
+  z-index: 1;
+}
+.teacher-premium .teacher-eyebrow {
+  color: #16a34a;
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.teacher-premium .teacher-heading h1 {
+  color: #1f2937;
+  letter-spacing: -0.035em;
+}
+.teacher-premium .teacher-heading h1 + p,
+.teacher-premium [data-slot='card-description'] {
+  color: #718078;
+}
+
+/* ---------- Shared white card language ---------- */
+.teacher-premium [data-slot='card'] {
+  border: 1px solid #dbe7df;
+  border-radius: 0.9rem;
+  background: #ffffff;
+  box-shadow: 0 5px 18px rgb(18 44 30 / 0.045);
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.teacher-premium [data-slot='card']:hover {
+  border-color: rgba(41, 169, 86, 0.45);
+  box-shadow: 0 7px 20px rgb(31 41 55 / 0.06);
+}
+.teacher-premium [data-slot='card-header'] {
+  padding-top: 1rem;
+}
+.teacher-premium [data-slot='card-title'] {
+  color: #263b30;
+  letter-spacing: -0.018em;
+}
+.teacher-premium [data-slot='card-title']::first-letter {
+  color: #16a34a;
+}
+
+/* ---------- Compact KPI cards ---------- */
+.teacher-premium .teacher-stat {
+  position: relative;
+  min-height: 7.5rem;
+  overflow: hidden;
+  border: 1px solid #dce9df;
+  border-radius: 0.9rem;
+  background: #ffffff;
+  box-shadow: 0 4px 16px rgb(31 41 55 / 0.04);
+}
+
+.teacher-premium .teacher-stat::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 0.18rem;
+  background: var(--teacher-accent-gradient);
+  content: '';
+}
+
+.teacher-premium .teacher-stat [data-slot='card-header'],
+.teacher-premium .teacher-stat [data-slot='card-content'] {
+  position: relative;
+  z-index: 1;
+}
+.teacher-premium .teacher-stat [data-slot='card-header'] {
+  padding-bottom: 0.35rem;
+}
+.teacher-premium .teacher-stat [data-slot='card-content'] {
+  padding-bottom: 1.1rem;
+}
+.teacher-premium .teacher-stat [data-slot='card-content'] > div {
+  color: #172b21;
+  font-size: 1.75rem;
+  letter-spacing: -0.04em;
+}
+.teacher-premium .teacher-stat-icon,
+.teacher-premium .teacher-quick-action-icon {
+  display: inline-flex;
+  border-radius: 0.65rem;
+  border-color: rgba(41, 169, 86, 0.3);
+  background: linear-gradient(
+    135deg,
+    rgba(41, 169, 86, 0.13),
+    rgba(255, 255, 255, 0.9)
+  );
+  color: #16a34a;
+}
+
+/* ---------- Rows, quick actions and tables ---------- */
+.teacher-premium .teacher-list-item {
+  min-height: 3.1rem;
+  border: 1px solid #e2ebe5;
+  border-radius: 0.7rem;
+  background: #fbfdfb;
+  transition:
+    border-color 140ms ease,
+    background 140ms ease;
+}
+.teacher-premium .teacher-list-item:hover,
+.teacher-premium .teacher-quick-action:hover,
+.teacher-premium table tbody tr:hover {
+  border-color: rgba(41, 169, 86, 0.4);
+  background: linear-gradient(
+    90deg,
+    rgba(41, 169, 86, 0.08) 0%,
+    rgba(103, 189, 128, 0.03) 50%,
+    #ffffff 100%
+  );
+}
+.teacher-premium .teacher-quick-actions {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin-top: 1.25rem;
+}
+.teacher-premium .teacher-quick-action {
+  display: flex;
+  min-height: 4.75rem;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.55rem;
+  border: 1px solid #deebe1;
+  border-radius: 0.75rem;
+  padding: 0.8rem;
+  background: #ffffff;
+  color: #294032;
+  text-align: start;
+  transition:
+    border-color 140ms ease,
+    background 140ms ease;
+}
+
+.teacher-premium .teacher-focus {
+  border: 1px solid rgba(41, 169, 86, 0.3);
+  background: var(--teacher-accent-soft);
+  color: #254332;
+  box-shadow: 0 5px 18px rgba(16, 100, 34, 0.07);
+}
+.teacher-premium .teacher-focus [data-slot='card-title'] {
+  color: #166534;
+}
+.teacher-premium .teacher-focus [data-slot='card-description'] {
+  color: #668272;
+}
+.teacher-premium .teacher-progress-track {
+  height: 0.45rem;
+  overflow: hidden;
+  border-radius: 0.25rem;
+  background: #e4eee6;
+}
+.teacher-premium .teacher-progress-value {
+  min-width: 1.5rem;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--teacher-accent-gradient);
+}
+.teacher-premium .teacher-activity-row {
+  display: grid;
+  grid-template-columns: 0.35rem 1fr auto;
+  align-items: center;
+  gap: 0.65rem;
+  min-height: 2.6rem;
+  border-bottom: 1px solid #edf2ee;
+}
+.teacher-premium .teacher-activity-row:last-child {
+  border-bottom: 0;
+}
+.teacher-premium .teacher-activity-marker {
+  height: 1.55rem;
+  background: var(--teacher-accent-gradient);
+}
+.teacher-premium [data-slot='button'] {
+  border-radius: 0.65rem;
+  transition:
+    box-shadow 140ms ease,
+    background 140ms ease;
+}
+.teacher-premium [data-slot='button']:hover {
+  box-shadow: 0 5px 14px rgb(22 101 52 / 0.1);
+}
+.teacher-premium [data-slot='input'],
+.teacher-premium [data-slot='select-trigger'] {
+  border-radius: 0.65rem;
+  background: #ffffff;
+}
+.teacher-premium table thead {
+  background: linear-gradient(90deg, #eef9f0, #f7fbf5);
+}
+.teacher-premium table th {
+  color: #53655a;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.teacher-premium table td {
+  color: #33443a;
+  font-size: 0.8rem;
+}
+.teacher-premium table tbody tr {
+  transition: background 140ms ease;
+}
+
+/* ---------- Profile and settings share the same reference-board language ---------- */
+.teacher-premium > .space-y-5 > div:first-child,
+.teacher-premium > .space-y-6 > div:first-child {
+  border-color: rgba(41, 169, 86, 0.25) !important;
+  border-radius: 0.9rem !important;
+  background: var(--teacher-accent-soft) !important;
+  box-shadow: 0 4px 16px rgb(31 41 55 / 0.035) !important;
+}
+.teacher-premium > .space-y-5 > div:first-child h1,
+.teacher-premium > .space-y-6 > div:first-child h1 {
+  color: #263b30 !important;
+}
+.teacher-premium > .space-y-5 > div:first-child [class*='bg-background'],
+.teacher-premium > .space-y-6 > div:first-child [class*='bg-background'] {
+  border-color: rgba(41, 169, 86, 0.24) !important;
+  background: #ffffff !important;
+}
+.teacher-premium [data-slot='card'] [class*='bg-muted'],
+.teacher-premium [data-slot='card'] [class*='bg-background'],
+.teacher-premium [data-slot='card'] [class*='bg-card'] {
+  border-color: rgba(41, 169, 86, 0.18) !important;
+  background: linear-gradient(
+    90deg,
+    rgba(41, 169, 86, 0.045),
+    rgba(255, 255, 255, 0.92)
+  ) !important;
+}
+.teacher-premium [data-slot='card'] [class*='bg-muted']:hover,
+.teacher-premium [data-slot='card'] [class*='bg-background']:hover {
+  background: var(--teacher-accent-soft) !important;
+}
+
+.teacher-premium .text-primary,
+.teacher-premium .text-emerald-600,
+.teacher-premium .text-emerald-700 {
+  color: #218c48 !important;
+}
+
+@media (max-width: 800px) {
+  .teacher-premium .teacher-quick-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 640px) {
+  .teacher-premium .teacher-heading {
+    padding: 1.1rem;
+  }
+  .teacher-premium .teacher-quick-actions {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.55rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .teacher-premium [data-slot='card'],
+  .teacher-premium [data-slot='button'],
+  .teacher-premium .teacher-list-item,
+  .teacher-premium table tbody tr {
+    transition: none;
+  }
+}
+
+/* =========================================================================
+   DARK MODE — single, consistent slate canvas with the green gradient
+   carried through as the accent (icons, progress, borders, hovers).
+   ========================================================================= */
+
+.dark .teacher-premium {
+  background: linear-gradient(180deg, #0c0d12 0%, #121612 52%, #0c0d12 100%);
+  color: #e5eee8;
+}
+
+.dark .teacher-premium .teacher-heading,
+.dark .teacher-premium > .space-y-5 > div:first-child,
+.dark .teacher-premium > .space-y-6 > div:first-child {
+  border-color: rgba(41, 169, 86, 0.35) !important;
+  background: linear-gradient(
+    100deg,
+    #16281c 0%,
+    #1f3327 55%,
+    #191d1a 100%
+  ) !important;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.25) !important;
+}
+
+.dark .teacher-premium .teacher-heading::after {
+  background: linear-gradient(
+    90deg,
+    rgba(41, 169, 86, 0) 0%,
+    rgba(41, 169, 86, 0.5) 50%,
+    rgba(255, 255, 255, 0.12) 100%
+  );
+  opacity: 1;
+}
+
+.dark .teacher-premium .teacher-heading h1,
+.dark .teacher-premium > .space-y-5 > div:first-child h1,
+.dark .teacher-premium > .space-y-6 > div:first-child h1,
+.dark .teacher-premium [data-slot='card-title'] {
+  color: #f1faf3 !important;
+}
+.dark .teacher-premium .teacher-heading h1 + p,
+.dark .teacher-premium [data-slot='card-description'] {
+  color: #a7b8ad;
+}
+
+.dark .teacher-premium [data-slot='card'],
+.dark .teacher-premium .teacher-stat {
+  border-color: #2b322d !important;
+  background: linear-gradient(135deg, #141714 0%, #191d1a 100%) !important;
+  box-shadow: 0 10px 24px rgb(0 0 0 / 0.25);
+}
+.dark .teacher-premium [data-slot='card']:hover {
+  border-color: rgba(41, 169, 86, 0.45);
+}
+
+.dark .teacher-premium .teacher-stat [data-slot='card-content'] > div {
+  color: #67bd80;
+}
+.dark .teacher-premium .teacher-stat-icon,
+.dark .teacher-premium .teacher-quick-action-icon {
+  border-color: rgba(41, 169, 86, 0.45);
+  background: linear-gradient(
+    135deg,
+    rgba(41, 169, 86, 0.22),
+    rgba(255, 255, 255, 0.06)
+  );
+  color: #67bd80;
+}
+
+.dark .teacher-premium .teacher-list-item,
+.dark .teacher-premium .teacher-quick-action {
+  border-color: #2b322d;
+  background: #191d1a;
+  color: #e7f0ea;
+}
+.dark .teacher-premium .teacher-list-item:hover,
+.dark .teacher-premium .teacher-quick-action:hover,
+.dark .teacher-premium table tbody tr:hover {
+  border-color: rgba(41, 169, 86, 0.55);
+  background: linear-gradient(90deg, #1c3126 0%, #223b2f 52%, #191d1a 100%);
+}
+
+.dark .teacher-premium .teacher-focus {
+  border-color: rgba(41, 169, 86, 0.35);
+  background: linear-gradient(115deg, #182c20 0%, #1f3a2b 50%, #19261c 100%);
+  box-shadow: 0 8px 22px rgb(0 0 0 / 0.22);
+}
+.dark .teacher-premium .teacher-focus [data-slot='card-title'] {
+  color: #67bd80 !important;
+}
+.dark .teacher-premium .teacher-focus [data-slot='card-description'] {
+  color: #a8c5ad;
+}
+
+.dark .teacher-premium .teacher-progress-track {
+  background: #20241f;
+}
+.dark .teacher-premium .teacher-progress-value,
+.dark .teacher-premium .teacher-stat::after,
+.dark .teacher-premium .teacher-activity-marker {
+  background: linear-gradient(
+    90deg,
+    rgba(41, 169, 86, 1) 0%,
+    rgba(103, 189, 128, 1) 50%,
+    rgba(185, 246, 189, 1) 100%
+  );
+}
+.dark .teacher-premium .teacher-activity-row {
+  border-color: #2b322d;
+}
+
+.dark .teacher-premium table thead {
+  background: linear-gradient(90deg, #16281c, #191d1a);
+}
+.dark .teacher-premium table th {
+  color: #9db3a6;
+}
+.dark .teacher-premium table td {
+  color: #d7e5db;
+}
+
+.dark .teacher-premium [data-slot='card'] [class*='bg-muted'],
+.dark .teacher-premium [data-slot='card'] [class*='bg-background'],
+.dark .teacher-premium [data-slot='card'] [class*='bg-card'] {
+  border-color: #2b322d !important;
+  background: #191d1a !important;
+  color: #e7f0ea !important;
+}
+.dark .teacher-premium [data-slot='card'] [class*='bg-muted']:hover,
+.dark .teacher-premium [data-slot='card'] [class*='bg-background']:hover {
+  background: #1c3126 !important;
+}
+
+.dark .teacher-premium > .space-y-5 > div:first-child [class*='bg-background'],
+.dark .teacher-premium > .space-y-6 > div:first-child [class*='bg-background'] {
+  border-color: rgba(41, 169, 86, 0.3) !important;
+  background: #191d1a !important;
+}
+
+.dark .teacher-premium .text-primary,
+.dark .teacher-premium .text-emerald-600,
+.dark .teacher-premium .text-emerald-700 {
+  color: #67bd80 !important;
+}

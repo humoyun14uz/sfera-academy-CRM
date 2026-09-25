@@ -84,6 +84,8 @@ const NAV_TITLE_KEYS: Partial<Record<string, TranslationKey>> = {
   'Ko‘rinish': 'appearance',
   Notifications: 'notifications',
   Bildirishnomalar: 'notifications',
+  Display: 'display',
+  Ekran: 'display',
   'Help Center': 'helpCenter',
   'Yordam markazi': 'helpCenter',
   'Secured by Clerk': 'securedByClerk',

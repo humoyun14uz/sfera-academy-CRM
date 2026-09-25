@@ -23,7 +23,7 @@ export type CrmGroup = { id: string; name: string; course: string; teacher: stri
 export type CrmApplication = { id: string; name: string; phone: string; course: string; status: ApplicationStatus; createdAt: string; followUpAt?: string; studentId?: string }
 export type CrmPayment = { id: string; studentId: string; amount: number; method: PaymentMethod; date: string; description: string }
 export type CrmActivity = { id: string; user: string; role: string; action: string; entity: string; createdAt: string }
-export type CrmNotification = { id: string; title: string; category: string; read: boolean; createdAt: string; target: string }
+export type CrmNotification = { id: string; title: string; category: string; read: boolean; createdAt: string; target?: string }
 
 const seed = {
   students: [
@@ -57,7 +57,7 @@ const seed = {
   ],
 }
 
-type CrmState = typeof seed & { recordPayment: (payment: Omit<CrmPayment, 'id'>) => void; setApplicationStatus: (id: string, status: ApplicationStatus) => void; markNotificationRead: (id: string) => void; addNotification: (notification: CrmNotification) => void }
+type CrmState = typeof seed & { recordPayment: (payment: Omit<CrmPayment, 'id'>) => void; setApplicationStatus: (id: string, status: ApplicationStatus) => void; markNotificationRead: (id: string) => void }
 const STORAGE_KEY = 'sfera-crm-state-v1'
 const initial = (): typeof seed => {
   if (typeof window === 'undefined') return seed
@@ -86,7 +86,6 @@ export const useCrmStore = create<CrmState>((set) => ({
   recordPayment: (payment) => set((state) => { const next = { ...state, payments: [...state.payments, { ...payment, id: `pay-${Date.now()}` }] }; persist(next); return next }),
   setApplicationStatus: (id, status) => set((state) => { const next = { ...state, applications: state.applications.map((a) => a.id === id ? { ...a, status } : a) }; persist(next); return next }),
   markNotificationRead: (id) => set((state) => { const next = { ...state, notifications: state.notifications.map((n) => n.id === id ? { ...n, read: true } : n) }; persist(next); return next }),
-  addNotification: (notification) => set((state) => { if (state.notifications.some((item) => item.id === notification.id)) return state; const next = { ...state, notifications: [notification, ...state.notifications] }; persist(next); return next }),
 }))
 
 export const formatUzs = (value: number) => `${new Intl.NumberFormat('uz-UZ').format(value)} so‘m`

@@ -1,5 +1,5 @@
 import { Outlet } from '@tanstack/react-router'
-import { Bell, Palette, Wrench, UserCog, ShieldCheck } from 'lucide-react'
+import { Monitor, Bell, Palette, Wrench, UserCog } from 'lucide-react'
 import { useLanguage } from '@/context/language-provider'
 import { Separator } from '@/components/ui/separator'
 import { Header } from '@/components/layout/header'
@@ -31,9 +31,9 @@ const sidebarNavItems = (english: boolean) => [
     icon: <Bell size={18} />,
   },
   {
-    title: english ? 'Security' : 'Xavfsizlik',
-    href: '/settings/security',
-    icon: <ShieldCheck size={18} />,
+    title: english ? 'Display' : 'Displey',
+    href: '/settings/display',
+    icon: <Monitor size={18} />,
   },
 ]
 
@@ -62,8 +62,8 @@ export function Settings() {
               </h1>
               <p className='mt-1 text-sm text-muted-foreground'>
                 {english
-                  ? 'Manage your account, appearance, notifications, and security preferences.'
-                  : 'Hisob, ko‘rinish, bildirishnomalar va xavfsizlik sozlamalarini boshqaring.'}
+                  ? 'Manage your account, appearance, notifications, and workspace preferences.'
+                  : 'Hisob, ko‘rinish, bildirishnomalar va ish maydoni sozlamalarini boshqaring.'}
               </p>
             </div>
             <div className='flex items-center gap-2 rounded-xl border bg-background/70 px-3 py-2 text-xs font-medium'>
@@ -73,8 +73,8 @@ export function Settings() {
           </div>
         </div>
         <Separator className='my-4 lg:my-6' />
-        <div className='flex min-h-0 flex-1 flex-col space-y-4 md:space-y-4 lg:flex-row lg:space-y-0 lg:space-x-10'>
-          <aside className='top-0 shrink-0 lg:sticky lg:w-[230px]'>
+        <div className='flex min-h-0 flex-1 flex-col space-y-2 md:space-y-2 lg:flex-row lg:space-y-0 lg:space-x-12'>
+          <aside className='top-0 shrink-0 lg:sticky lg:w-1/5'>
             <SidebarNav items={sidebarNavItems(english)} />
           </aside>
           <div className='flex w-full min-w-0 p-1'>

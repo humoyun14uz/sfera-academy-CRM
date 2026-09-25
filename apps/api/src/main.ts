@@ -12,7 +12,7 @@ import { AllExceptionsFilter } from './common/filters/all-exceptions.filter'
 import { TransformInterceptor } from './common/interceptors/transform.interceptor'
 import * as dotenv from 'dotenv'
 
-dotenv.config()
+dotenv.config({ path: process.env.ENV_FILE || '../../.env' })
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -50,20 +50,31 @@ async function bootstrap() {
     .setTitle('Sfera Academy CRM API')
     .setDescription(
       [
-        'Production-ready multi-tenant CRM API for Sfera IT Academy.',
+        'Multi-tenant CRM API for Sfera IT Academy.',
         '',
         'Protected endpoints use Clerk bearer authentication. Click Authorize and enter a valid Clerk access token to try them from Swagger UI.',
         '',
-        'The API is grouped by Academies, Authentication & Identity, Audit Logs, Attendance, Courses, Enrollments, Finance, Grades, Groups, Leads, Manager, Reports, Students, Tasks, and Teacher.',
+        'Versioned CRUD endpoints use the /api/v1 prefix. Role workspaces currently use /manager, /teacher, /tasks, and /reports.',
         '',
-        'New Features:',
-        '- Manager module: Dashboard statistics, activities, groups statistics, teachers performance, financial overview',
-        '- Teacher module: Dashboard, groups, schedule, attendance, assignments, grades, profile management',
-        '- Tasks module: Task management with priorities, categories, and assignments',
-        '- Reports module: Attendance, financial, academic, group performance, student performance reports',
+        'Manager, Finance, and Teacher endpoint families are documented below. Finance routes use academy-scoped database operations; some manager, teacher, and report workspace methods in this repository remain demo/TODO implementations.',
       ].join('\n')
     )
     .setVersion('2.0.0')
+    .addTag('Academies', 'Academy administration and lookup')
+    .addTag('Authentication & Identity', 'Current-user profile and Clerk identity synchronization')
+    .addTag('Audit Logs', 'Academy-scoped audit events')
+    .addTag('Attendance', 'Lesson attendance sessions and records')
+    .addTag('Courses', 'Course catalog management')
+    .addTag('Enrollments', 'Student enrollment workflows')
+    .addTag('Finance', 'Invoices, payments, refunds, and financial summaries')
+    .addTag('Grades', 'Student grades and grade history')
+    .addTag('Groups', 'Class groups, teacher assignments, and enrolled students')
+    .addTag('Leads', 'CRM lead and application workflows')
+    .addTag('Manager', 'Manager dashboard and operational summaries')
+    .addTag('Reports', 'Attendance, finance, academic, and performance reports')
+    .addTag('Students', 'Student profiles and academy roster')
+    .addTag('Tasks', 'Task creation, assignment, and status management')
+    .addTag('Teacher', 'Teacher workspace: groups, lessons, attendance, assignments, and grades')
     .setContact(
       'Sfera IT Academy',
       'https://github.com/humoyun14uz/sfera-academy-CRM',

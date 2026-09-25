@@ -229,7 +229,7 @@ function MySchedulePage() {
                         </span>
                       </div>
                       <Badge variant='outline' className='text-[10px]'>
-                        {item.type === 'online' ? label('Onlayn · Zoom', 'Online · Zoom') : label('Oflayn', 'Offline')}
+                        {item.type === 'online' ? 'Zoom Online' : 'Offline'}
                       </Badge>
                     </div>
                     <CardTitle className='mt-2 text-base font-bold'>

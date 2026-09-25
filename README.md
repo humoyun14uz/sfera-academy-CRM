@@ -1,49 +1,78 @@
-# Education Management CRM
+# Sfera Academy CRM — Manager, Finance va Teacher
 
-Sfera IT Academy uchun rollarga asoslangan, responsive React + TypeScript CRM. Ilova frontend demo/local-storage oqimlari bilan ishlaydi; backend kerak bo‘ladigan joylar kod ichida `BACKEND:` izohi bilan ko‘rsatilgan.
+Ushbu loyiha uchta yuklangan arxivdagi role interfeyslarini bitta React ilovasiga birlashtiradi va GitHub’dagi NestJS backendini shu loyiha ichiga qo‘shadi. GitHub repozitoriyasining frontend qismi olinmagan. Asosiy frontend Manager ZIP’dan olindi; Finance ZIP’dagi moliya va umumiy interfeys o‘zgarishlari qo‘shildi; Teacher ZIP’dagi yangilangan o‘qituvchi paneli saqlandi.
 
-## Ishga tushirish
+Frontend React, TypeScript, Vite va TanStack Router’da ishlaydi. Backend NestJS, Fastify va PostgreSQL bilan ishlaydi. API endpointlari Swagger’da ko‘rsatiladi.
+
+## Rollar
+
+Manager ish maydoni arizalar, guruhlar, o‘quvchilar, o‘qituvchilar va boshqaruv panelini o‘z ichiga oladi. Finance ish maydoni to‘lovlar, qarzdorlik va moliyaviy hisobotlarni o‘z ichiga oladi. Teacher ish maydoni guruhlar, jadval, davomat, topshiriqlar va baholarni o‘z ichiga oladi. Admin va Student panellari Manager ZIP’dagi holicha qoldirilgan.
+
+## Talablar
+
+Node.js 22 yoki undan yangi versiya, pnpm 11 va PostgreSQL kerak. Ma’lumotlar bazasini `docker compose` orqali ishga tushirish mumkin.
+
+## Mahalliy ishga tushirish
+
+Loyiha ildiz papkasida quyidagi buyruqlarni bajaring:
 
 ```bash
 pnpm install
-pnpm run dev
+cp .env.example .env
+docker compose up -d postgres
+pnpm db:migrate
+pnpm db:seed
 ```
 
-Production build va tekshiruv:
+Keyin ikkita terminal oching. Birinchisida API’ni ishga tushiring:
 
 ```bash
-pnpm run build
-pnpm run lint
+pnpm api:dev
 ```
 
-## Asosiy rollar va dashboardlar
+Ikkinchisida frontendni ishga tushiring:
 
-| Rol                 | Dashboard/ish maydoni | Asosiy bo‘limlar                                                      |
-| ------------------- | --------------------- | --------------------------------------------------------------------- |
-| Super Admin / Admin | Bosh dashboard        | Foydalanuvchilar, academy, vazifalar, hisobotlar, sozlamalar          |
-| Manager             | Bosh dashboard        | Arizalar, guruhlar, o‘quvchilar, o‘qituvchilar, vazifalar, hisobotlar |
-| Teacher             | Teacher workspace     | Guruhlar, jadval, davomat, vazifalar, baholar                         |
-| Finance             | Finance workspace     | To‘lovlar, qarzdorlik, moliyaviy hisobotlar                           |
-| Student             | Student dashboard     | Kurslar, vazifalar va shaxsiy natijalar                               |
+```bash
+pnpm dev
+```
 
-Sidebar nomlari `src/components/layout/app-sidebar.tsx` dagi route nomlari bilan, dashboard redirectlari esa `src/routes/_authenticated/index.tsx` dagi role mapping bilan boshqariladi.
+Frontend `http://localhost:5173` manzilida ochiladi. Swagger UI `http://localhost:3000/api/docs` manzilida, OpenAPI JSON esa `http://localhost:3000/api/docs-json` manzilida ochiladi.
 
-## Hisobotlar va PDF
+Vite dev serveri `/api`, `/manager`, `/teacher`, `/tasks` va `/reports` so‘rovlarini `localhost:3000` dagi NestJS serveriga uzatadi. Hosting muhitida `.env` ichidagi `VITE_API_BASE_URL` va `API_PUBLIC_URL` qiymatlarini mos server manzillariga o‘zgartiring.
 
-Academy va Finance hisobotlarida CSV yuklab olish ishlaydi. `Print / PDF` tugmasi brauzerning print oynasini ochadi; u yerdan **Save as PDF** tanlanadi. Teacher baholarida ham CSV va print/PDF oqimi mavjud.
+## Frontend va API integratsiyasi
 
-## Validatsiya va ma’lumot saqlash
+`.env` ichida `VITE_API_ENABLED=true` qiling va Vite serverini qayta ishga tushiring. Shunda Manager paneli `/manager/dashboard`, Teacher paneli `/teacher/dashboard`, Finance paneli esa `/api/v1/finance/summary` endpointidan ma’lumot olib, ulanish holatini ko‘rsatadi. API so‘rovlari frontenddagi mavjud access tokenni Bearer token sifatida yuboradi.
 
-Tasklar localStorage’da saqlanadi. O‘qituvchi qo‘shish formasida ism, email va telefon regex-validatsiyasi bor. Backend ulanishida shu validatsiyalar serverda ham qayta bajarilishi shart.
+Mahalliy demo loginlar ishlatilganda frontend development muhitida `test-token-*` tokenlarini yuboradi. Bunday tokenlar backend tomonidan faqat `NODE_ENV=development` holatida qabul qilinadi; production uchun mo‘ljallanmagan. Sinov tokenlari va demo loginlar haqiqiy autentifikatsiya o‘rnini bosmaydi. Production’da Clerk konfiguratsiyasi hamda haqiqiy login oqimini sozlash kerak.
 
-## Papkalar
+**Muhim:** barcha frontend ekranlari hali to‘liq server ma’lumotiga ko‘chirilmagan. Manager va Teacher API servislarining ayrimlari repozitoriyada `TODO` yoki statik demo javoblar bilan turibdi. Finance summary endpointi esa PostgreSQL’dan akademiya bo‘yicha haqiqiy jamlanmani hisoblaydi. Qolgan ekranlardagi demo va localStorage oqimlari saqlangan.
 
-- `src/features/tasks` — vazifalar, kategoriya/status/priority selectlari.
-- `src/features/academy-module` — arizalar, guruhlar, o‘qituvchilar, jadval, davomat, moliya va hisobotlar.
-- `src/features/teacher` — o‘qituvchi dashboardi, assignment va baholar.
-- `src/features/finance` — to‘lov va moliyaviy hisobotlar.
-- `src/components/layout` — sidebar, header va responsive layout.
+## Tekshiruv va build
 
-## Muhim eslatma
+```bash
+pnpm build                 # frontend
+pnpm api:build             # shared packages + NestJS API
+pnpm build:all             # backend va frontend ketma-ket
+pnpm lint
+```
 
-Real multi-user persistence, authentication va server-side PDF generation uchun backend endpointlar ulanishi kerak. Hozirgi frontend oqimlari backend bo‘lmasa ham foydalanuvchiga xatolik bermasdan local/browser darajasida ishlaydi.
+`pnpm db:generate` Drizzle migration yaratadi. `pnpm db:migrate` mavjud migrationlarni qo‘llaydi. `pnpm db:seed` mahalliy demo rollar, foydalanuvchilar va boshlang‘ich CRM ma’lumotlarini qo‘shadi.
+
+## Tuzilma
+
+- `src/` — Manager ZIP asosidagi React frontend va Finance/Teacher birlashtirilgan interfeyslari.
+- `apps/api/` — GitHub repozitoriyasidan olingan NestJS backend.
+- `packages/contracts/` — API DTO va Zod kontraktlari.
+- `packages/db/` — Drizzle sxemasi, migratsiyalar va seed.
+- `src/lib/api-client.ts` — frontenddan API’ga so‘rov yuborish va javob qobig‘ini ochish.
+
+## Eslatmalar
+
+Seed ichidagi ma’lumotlar faqat mahalliy sinov uchun. `.env` faylini ommaviy repozitoriyaga yubormang. Finance API ma’lumotlarini ko‘rish uchun migration va seed bajarilgan, API esa ishga tushgan bo‘lishi shart.
+
+## Manbalar
+
+[1] [pnpm workspace documentation](https://pnpm.io/workspaces "pnpm Workspaces") — monorepo paketlarining workspace sozlamalari.
+[2] [NestJS OpenAPI documentation](https://docs.nestjs.com/openapi/introduction "NestJS OpenAPI (Swagger)") — Swagger hujjatlarini yaratish va taqdim etish.
+[3] [Drizzle ORM migrations](https://orm.drizzle.team/docs/migrations "Drizzle ORM Migrations") — migrationlarni yaratish va qo‘llash.

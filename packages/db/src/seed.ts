@@ -1,4 +1,5 @@
 import { createDb, getDbPool } from './index.js'
+import * as dotenv from 'dotenv'
 import * as schema from './schema/index.js'
 import {
   SYSTEM_ROLES,
@@ -7,6 +8,8 @@ import {
   SystemRole,
 } from '@sfera/contracts'
 import { eq } from 'drizzle-orm'
+
+dotenv.config({ path: process.env.ENV_FILE || '../../.env' })
 
 export async function seedDatabase() {
   const db = createDb()
@@ -375,4 +378,3 @@ if (process.argv[1]?.endsWith('seed.ts') || process.argv[1]?.endsWith('seed.js')
       await getDbPool().end()
     })
 }
-

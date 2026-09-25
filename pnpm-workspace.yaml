@@ -1,9 +1,8 @@
-packages:
-  - '.'
-  - 'apps/*'
-  - 'packages/*'
-
 allowBuilds:
   '@clerk/shared': true
+  '@scarf/scarf': false
   esbuild: true
-  '@scarf/scarf': true
+
+packages:
+  - 'apps/*'
+  - 'packages/*'

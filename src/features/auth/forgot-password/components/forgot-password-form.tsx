@@ -71,7 +71,7 @@ export function ForgotPasswordForm({
           )}
         />
         <Button
-          className='mt-2 h-11 rounded-lg bg-[#0aa875] text-[15px] font-bold shadow-[0_12px_24px_-10px_rgba(5,150,105,0.8)] transition-all hover:bg-[#078d63] hover:shadow-[0_16px_28px_-10px_rgba(5,150,105,0.9)]'
+          className='mt-2 h-11 rounded-lg bg-[#29a956] text-[15px] font-bold shadow-[0_12px_24px_-10px_rgba(5,150,105,0.8)] transition-all hover:bg-[#218c48] hover:shadow-[0_16px_28px_-10px_rgba(5,150,105,0.9)]'
           disabled={isLoading}
         >
           Davom etish

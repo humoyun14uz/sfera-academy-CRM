@@ -5,6 +5,7 @@ import { Link, useNavigate } from '@tanstack/react-router'
 import { ArrowRight, LockKeyhole, Mail } from 'lucide-react'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
+import { isBackendEnabled } from '@/lib/api-client'
 import { cn } from '@/lib/utils'
 import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
@@ -114,7 +115,19 @@ export function UserAuthForm({
       exp: 4102444799999,
     }
     auth.setUser(mockUser)
-    auth.setAccessToken('mock-access-token')
+    const backendRoleToken: Record<string, string> = {
+      'Super Admin': 'test-token-superadmin',
+      Admin: 'test-token-admin',
+      Manager: 'test-token-manager',
+      Teacher: 'test-token-teacher',
+      Finance: 'test-token-finance',
+      Student: 'test-token-student',
+    }
+    auth.setAccessToken(
+      isBackendEnabled()
+        ? (backendRoleToken[account.role] ?? 'mock-access-token')
+        : 'mock-access-token'
+    )
     const panelNames: Record<string, string> = {
       'Super Admin': 'Super Admin',
       Admin: 'Admin',
@@ -213,7 +226,7 @@ export function UserAuthForm({
         </div>
         <Button
           type='submit'
-          className='-mt-1 h-11 rounded-lg bg-[#047857] text-[15px] font-bold shadow-[0_12px_24px_-10px_rgba(5,120,87,0.8)] transition-all hover:bg-[#036b4e] hover:shadow-[0_16px_28px_-10px_rgba(5,120,87,0.9)]'
+          className='-mt-1 h-11 rounded-lg bg-[#29a956] text-[15px] font-bold shadow-[0_12px_24px_-10px_rgba(5,120,87,0.8)] transition-all hover:bg-[#218c48] hover:shadow-[0_16px_28px_-10px_rgba(5,120,87,0.9)]'
         >
           <span>{t('signIn')}</span>
           <ArrowRight className='size-4' />

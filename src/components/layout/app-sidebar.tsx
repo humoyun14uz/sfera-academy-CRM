@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useAuthStore } from '@/stores/auth-store'
 import { getPrimaryRole } from '@/lib/rbac'
 import { useLanguage, type TranslationKey } from '@/context/language-provider'
@@ -10,10 +9,10 @@ import {
   SidebarHeader,
   SidebarRail,
 } from '@/components/ui/sidebar'
+import { AppTitle } from './app-title'
 import { sidebarData } from './data/sidebar-data'
 import { NavGroup } from './nav-group'
 import { SidebarUser } from './sidebar-user'
-import { CompanySelector } from './company-selector'
 
 export function AppSidebar() {
   const { collapsible, variant } = useLayout()
@@ -22,59 +21,50 @@ export function AppSidebar() {
   const role = getPrimaryRole(user?.role)
   const allowedGroups =
     role === 'Super Admin'
-      ? ['Academy', 'Management', 'System', 'Teacher', 'Finance', 'Student']
-      : role === 'Admin'
-        ? ['Academy', 'Management', 'System']
-        : role === 'Manager'
-          ? ['Academy', 'Management']
-          : role === 'Teacher'
-            ? ['Teacher', 'TeacherSystem']
-            : role === 'Finance'
-              ? ['Finance', 'FinanceSystem']
-              : ['Student', 'StudentFinance']
-
-  // Mock company data
-  const companies = [
-    { id: '1', name: 'Sfera IT Academy' },
-    { id: '2', name: 'Conceptzilla' },
-    { id: '3', name: 'Shakuro' }
-  ]
-  
-  const [currentCompany, setCurrentCompany] = useState(companies[0])
-
-  const navGroups = sidebarData.navGroups
-    .filter((group) => allowedGroups.includes(group.title))
-    .map((group) => ({
-      ...group,
-      title: getGroupTitle(group.title, t),
-      items: group.items.map((item) => {
-        const { items: nestedItems, ...itemWithoutNestedItems } = item
-        return {
-          ...itemWithoutNestedItems,
-          title: translateTitle(item.title, t),
-          ...(nestedItems
-            ? {
-                items: nestedItems.map((nested) => ({
-                  ...nested,
-                  title: translateTitle(nested.title, t),
-                })),
-              }
-            : {}),
-        }
-      }),
-    })) as typeof sidebarData.navGroups
-
+      ? ['Academy', 'Management', 'System']
+      : role === 'Manager'
+        ? ['Academy', 'Management']
+        : role === 'Teacher'
+          ? ['Teacher', 'TeacherSystem']
+          : role === 'Finance'
+            ? ['Finance', 'FinanceSystem']
+            : ['Student', 'StudentFinance', 'StudentSystem']
+  const groups = sidebarData.navGroups.filter((group) =>
+    allowedGroups.includes(group.title)
+  )
+  const visibleGroups = groups
+  const navGroups = visibleGroups.map((group) => ({
+    ...group,
+    title: ['Teacher', 'Finance', 'Student'].includes(group.title)
+      ? t(group.title.toLowerCase() as 'teacher' | 'finance' | 'student')
+      : group.title === 'Academy'
+        ? t('academy')
+        : group.title === 'Management'
+          ? 'Boshqaruv'
+          : group.title === 'StudentFinance'
+            ? t('finance')
+            : t('system'),
+    items: group.items.map((item) => {
+      const { items: nestedItems, ...itemWithoutNestedItems } = item
+      return {
+        ...itemWithoutNestedItems,
+        title: translateTitle(item.title, t),
+        ...(nestedItems
+          ? {
+              items: nestedItems.map((nested) => ({
+                ...nested,
+                title: translateTitle(nested.title, t),
+              })),
+            }
+          : {}),
+      }
+    }),
+  })) as typeof sidebarData.navGroups
   return (
     <Sidebar collapsible={collapsible} variant={variant}>
       <SidebarHeader className='border-b border-sidebar-border px-4'>
         <div className='-mx-2'>
-          {(role === 'Super Admin' || role === 'Admin' || role === 'Manager') && (
-            <CompanySelector
-              companies={companies}
-              currentCompany={currentCompany}
-              onCompanyChange={setCurrentCompany}
-            />
-          )}
+          <AppTitle />
         </div>
       </SidebarHeader>
       <SidebarContent>
@@ -93,16 +83,6 @@ export function AppSidebar() {
       <SidebarRail />
     </Sidebar>
   )
-}
-
-function getGroupTitle(title: string, t: (key: TranslationKey) => string) {
-  if (title === 'Academy') return t('academy')
-  if (title === 'Management') return 'Boshqaruv'
-  if (title === 'Teacher') return t('teacher')
-  if (title === 'Finance') return t('finance')
-  if (title === 'Student') return t('student')
-  if (title === 'StudentFinance') return t('finance')
-  return t('system')
 }
 
 function translateTitle(title: string, t: (key: TranslationKey) => string) {

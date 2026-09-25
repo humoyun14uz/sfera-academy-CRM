@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Outlet } from '@tanstack/react-router'
 import { ClerkFullLogo } from '@/assets/clerk-full-logo'
-import academyLogo from '@/assets/sfera-it-academy-logo.webp'
+import academyLogo from '@/assets/sfera-it-academy-logo.png'
 import { useLanguage } from '@/context/language-provider'
 import { LearnMore } from '@/components/learn-more'
 

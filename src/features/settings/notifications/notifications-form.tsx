@@ -1,13 +1,9 @@
-import { useState } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link } from '@tanstack/react-router'
 import { showSubmittedData } from '@/lib/show-submitted-data'
 import { useLanguage } from '@/context/language-provider'
-import { useAuthStore } from '@/stores/auth-store'
-import { getPrimaryRole } from '@/lib/rbac'
-import { useCrmStore } from '@/lib/crm-store'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -21,17 +17,6 @@ import {
 } from '@/components/ui/form'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Switch } from '@/components/ui/switch'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Plus, Bell } from 'lucide-react'
 
 const notificationsFormSchema = z.object({
   type: z.enum(['all', 'mentions', 'none'], {
@@ -47,15 +32,7 @@ const notificationsFormSchema = z.object({
   security_emails: z.boolean(),
 })
 
-const createNotificationSchema = z.object({
-  title: z.string().min(1, 'Title is required'),
-  message: z.string().min(1, 'Message is required'),
-  category: z.enum(['system', 'alert', 'info', 'success']),
-  targetRole: z.enum(['all', 'admin', 'manager', 'teacher', 'student', 'finance']),
-})
-
 type NotificationsFormValues = z.infer<typeof notificationsFormSchema>
-type CreateNotificationValues = z.infer<typeof createNotificationSchema>
 
 // This can come from your database or API.
 const defaultValues: Partial<NotificationsFormValues> = {
@@ -68,57 +45,17 @@ const defaultValues: Partial<NotificationsFormValues> = {
 export function NotificationsForm() {
   const { language } = useLanguage()
   const english = language === 'en'
-  const user = useAuthStore((state) => state.auth.user)
-  const role = getPrimaryRole(user?.role)
-  const addNotification = useCrmStore((state) => state.addNotification)
-  
   const form = useForm<NotificationsFormValues>({
     resolver: zodResolver(notificationsFormSchema),
     defaultValues,
   })
 
-  const createForm = useForm<CreateNotificationValues>({
-    resolver: zodResolver(createNotificationSchema),
-    defaultValues: {
-      title: '',
-      message: '',
-      category: 'info',
-      targetRole: 'all',
-    },
-  })
-
-  const canCreateNotifications = role === 'Super Admin' || role === 'Admin' || role === 'Manager'
-  const [notificationCounter, setNotificationCounter] = useState(0)
-
-  const handleCreateNotification = (data: CreateNotificationValues) => {
-    const newNotification = {
-      id: `notif-${notificationCounter}`,
-      title: data.title,
-      category: data.category,
-      read: false,
-      createdAt: new Date().toISOString(),
-      target: '/settings/notifications',
-    }
-    
-    setNotificationCounter(notificationCounter + 1)
-    
-    addNotification(newNotification)
-    createForm.reset()
-    
-    if (english) {
-      alert('Notification created successfully!')
-    } else {
-      alert('Bildirishnoma muvaffaqiyatli yaratildi!')
-    }
-  }
-
   return (
-    <>
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit((data) => showSubmittedData(data))}
-          className='space-y-8'
-        >
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit((data) => showSubmittedData(data))}
+        className='space-y-8'
+      >
         <FormField
           control={form.control}
           name='type'
@@ -282,121 +219,5 @@ export function NotificationsForm() {
         <Button type='submit'>{english ? 'Update notifications' : 'Bildirishnomalarni yangilash'}</Button>
       </form>
     </Form>
-
-    {/* Notification Creation Form for Admins/Managers */}
-    {canCreateNotifications && (
-      <Card className='mt-8 border-primary/20'>
-        <CardHeader>
-          <CardTitle className='flex items-center gap-2'>
-            <Bell className='size-5 text-primary' />
-            {english ? 'Create New Notification' : 'Yangi Bildirishnoma Yaratish'}
-          </CardTitle>
-          <CardDescription>
-            {english ? 'Send notifications to users in the system' : 'Tizimdagi foydalanuvchilarga bildirishnomalar yuboring'}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Form {...createForm}>
-            <form
-              onSubmit={createForm.handleSubmit(handleCreateNotification)}
-              className='space-y-4'
-            >
-              <FormField
-                control={createForm.control}
-                name='title'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{english ? 'Title' : 'Sarlavha'}</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder={english ? 'Enter notification title...' : 'Bildirishnoma sarlavhasini kiriting...'}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={createForm.control}
-                name='message'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{english ? 'Message' : 'Xabar'}</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder={english ? 'Enter notification message...' : 'Bildirishnoma xabarini kiriting...'}
-                        rows={3}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <div className='grid gap-4 sm:grid-cols-2'>
-                <FormField
-                  control={createForm.control}
-                  name='category'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{english ? 'Category' : 'Kategoriya'}</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder={english ? 'Select category' : 'Kategoriyani tanlang'} />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value='system'>{english ? 'System' : 'Tizim'}</SelectItem>
-                          <SelectItem value='alert'>{english ? 'Alert' : 'Ogohlantirish'}</SelectItem>
-                          <SelectItem value='info'>{english ? 'Info' : 'Ma\'lumot'}</SelectItem>
-                          <SelectItem value='success'>{english ? 'Success' : 'Muvaffaqiyat'}</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={createForm.control}
-                  name='targetRole'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{english ? 'Target Role' : 'Maqsad Rol'}</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder={english ? 'Select target role' : 'Maqsad rolni tanlang'} />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value='all'>{english ? 'All Users' : 'Barcha Foydalanuvchilar'}</SelectItem>
-                          <SelectItem value='admin'>{english ? 'Admins' : 'Adminlar'}</SelectItem>
-                          <SelectItem value='manager'>{english ? 'Managers' : 'Managerlar'}</SelectItem>
-                          <SelectItem value='teacher'>{english ? 'Teachers' : 'O\'qituvchilar'}</SelectItem>
-                          <SelectItem value='student'>{english ? 'Students' : 'O\'quvchilar'}</SelectItem>
-                          <SelectItem value='finance'>{english ? 'Finance' : 'Moliya'}</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <Button type='submit' className='w-full'>
-                <Plus className='me-2 size-4' />
-                {english ? 'Create Notification' : 'Bildirishnoma Yaratish'}
-              </Button>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
-    )}
-    </>
   )
 }

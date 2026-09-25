@@ -18,7 +18,6 @@
 
   body {
     @apply min-h-svh w-full min-w-0 bg-background text-foreground has-[div[data-variant='inset']]:bg-sidebar;
-    font-family: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
     overflow-x: clip;
   }
 
@@ -114,17 +113,17 @@
   display: block;
   width: 5rem;
   height: 5rem;
-  border: 1.5px solid rgb(5 150 105 / 62%);
+  border: 1.5px solid rgb(33 140 72 / 62%);
   border-radius: 0.45rem;
   background: linear-gradient(
     135deg,
-    rgb(16 185 129 / 16%),
-    rgb(20 184 166 / 5%)
+    rgb(41 169 86 / 16%),
+    rgb(33 140 72 / 5%)
   );
   box-shadow:
-    0 0 0 1px rgb(16 185 129 / 10%),
-    0 16px 42px rgb(5 150 105 / 16%),
-    inset 0 0 24px rgb(16 185 129 / 7%);
+    0 0 0 1px rgb(41 169 86 / 10%),
+    0 16px 42px rgb(33 140 72 / 16%),
+    inset 0 0 24px rgb(41 169 86 / 7%);
   transform: rotate(18deg);
   animation: login-square-float 11s ease-in-out infinite;
   will-change: transform, opacity;

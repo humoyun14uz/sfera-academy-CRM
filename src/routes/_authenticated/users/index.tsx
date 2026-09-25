@@ -1,9 +1,8 @@
 import z from 'zod'
-import { createFileRoute, lazyRouteComponent } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { requirePermission } from '@/lib/route-guard'
+import { Users } from '@/features/users'
 import { roles } from '@/features/users/data/data'
-
-const Users = lazyRouteComponent(() => import('@/features/users'), 'Users')
 
 const usersSearchSchema = z.object({
   page: z.number().optional().catch(1),

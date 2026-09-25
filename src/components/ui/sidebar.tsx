@@ -184,7 +184,7 @@ function Sidebar({
           data-sidebar='sidebar'
           data-slot='sidebar'
           data-mobile='true'
-          className='w-(--sidebar-width) border-e border-sidebar-border/70 bg-sidebar p-0 text-sidebar-foreground shadow-xl [&>button]:hidden'
+          className='w-(--sidebar-width) bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden'
           style={
             {
               '--sidebar-width': SIDEBAR_WIDTH_MOBILE,
@@ -241,7 +241,7 @@ function Sidebar({
         <div
           data-sidebar='sidebar'
           data-slot='sidebar-inner'
-          className='flex h-full w-full flex-col bg-sidebar group-data-[variant=floating]:rounded-2xl group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow-[0_8px_30px_rgb(15_23_42/0.08)]'
+          className='flex h-full w-full flex-col bg-sidebar group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow-sm'
         >
           {children}
         </div>

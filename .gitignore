@@ -13,8 +13,6 @@ dist-ssr
 *.local
 
 .env
-.env.*
-!.env.example
 
 # Editor directories and files
 .vscode/*
@@ -34,6 +32,3 @@ dist-ssr
 # Vitest artifacts (browser screenshots/attachments)
 **/__screenshots__/
 .vitest-attachments/
-
-# TypeScript incremental build info
-*.tsbuildinfo

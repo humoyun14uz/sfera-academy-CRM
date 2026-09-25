@@ -1,12 +1,8 @@
-import { createFileRoute, lazyRouteComponent } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
+import { TeacherDashboard } from '@/features/teacher'
 import { requirePermission } from '@/lib/route-guard'
-
-const TeacherDashboard = lazyRouteComponent(
-  () => import('@/features/teacher'),
-  'TeacherDashboard'
-)
 
 export const Route = createFileRoute('/_authenticated/teacher/')({
   beforeLoad: () => requirePermission('teacher.workspace'),
-  component: TeacherDashboard,
+  component: () => <TeacherDashboard />,
 })

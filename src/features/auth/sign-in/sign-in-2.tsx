@@ -1,9 +1,9 @@
 import { Link } from '@tanstack/react-router'
-import academyLogo from '@/assets/sfera-it-academy-logo.webp'
+import academyLogo from '@/assets/sfera-it-academy-logo.png'
 import { cn } from '@/lib/utils'
 import { useLanguage } from '@/context/language-provider'
-import dashboardDark from './assets/dashboard-dark.webp'
-import dashboardLight from './assets/dashboard-light.webp'
+import dashboardDark from './assets/dashboard-dark.png'
+import dashboardLight from './assets/dashboard-light.png'
 import { UserAuthForm } from './components/user-auth-form'
 
 export function SignIn2() {
