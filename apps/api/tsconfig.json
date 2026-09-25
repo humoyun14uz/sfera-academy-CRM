@@ -10,7 +10,7 @@
     "sourceMap": true,
     "outDir": "./dist",
     "rootDir": "./src",
-    "incremental": true,
+    "incremental": false,
     "skipLibCheck": true,
     // strictNullChecks MUST stay enabled: drizzle-orm's `$inferInsert` /
     // insert-value mapped types silently collapse when it is disabled, which

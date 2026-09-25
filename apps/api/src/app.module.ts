@@ -12,6 +12,10 @@ import { GradesModule } from './modules/grades/grades.module'
 import { LeadsModule } from './modules/leads/leads.module'
 import { FinanceModule } from './modules/finance/finance.module'
 import { NotificationsModule } from './modules/notifications/notifications.module'
+import { ManagerModule } from './modules/manager/manager.module'
+import { TeacherModule } from './modules/teacher/teacher.module'
+import { TasksModule } from './modules/tasks/tasks.module'
+import { ReportsModule } from './modules/reports/reports.module'
 
 @Module({
   imports: [
@@ -28,6 +32,10 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
     LeadsModule,
     FinanceModule,
     NotificationsModule,
+    ManagerModule,
+    TeacherModule,
+    TasksModule,
+    ReportsModule,
   ],
 })
 export class AppModule {}

@@ -54,10 +54,16 @@ async function bootstrap() {
         '',
         'Protected endpoints use Clerk bearer authentication. Click Authorize and enter a valid Clerk access token to try them from Swagger UI.',
         '',
-        'The API is grouped by Academies, Authentication & Identity, Audit Logs, Attendance, Courses, Enrollments, Finance, Grades, Groups, Leads, and Students.',
+        'The API is grouped by Academies, Authentication & Identity, Audit Logs, Attendance, Courses, Enrollments, Finance, Grades, Groups, Leads, Manager, Reports, Students, Tasks, and Teacher.',
+        '',
+        'New Features:',
+        '- Manager module: Dashboard statistics, activities, groups statistics, teachers performance, financial overview',
+        '- Teacher module: Dashboard, groups, schedule, attendance, assignments, grades, profile management',
+        '- Tasks module: Task management with priorities, categories, and assignments',
+        '- Reports module: Attendance, financial, academic, group performance, student performance reports',
       ].join('\n')
     )
-    .setVersion('1.0.0')
+    .setVersion('2.0.0')
     .setContact(
       'Sfera IT Academy',
       'https://github.com/humoyun14uz/sfera-academy-CRM',
